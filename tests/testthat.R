@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(stancer-playground)
+library(stancer.playground)
 
-test_check("stancer-playground")
+test_check("stancer.playground")

@@ -16,6 +16,7 @@ output: github_document
 # `{stancer-playground}`
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 ## Installation
@@ -31,7 +32,7 @@ You can install the development version of `{stancer-playground}` like so:
 You can launch the application by running:
 
 ```{r, eval = FALSE}
-stancer-playground::run_app()
+stancer.playground::run_app()
 ```
 
 ## About

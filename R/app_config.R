@@ -11,7 +11,7 @@
 app_sys <- function(
 	...
 ) {
-	system.file(..., package = "stancer_playground")
+  system.file(..., package = "stancer.playground")
 }
 
 

@@ -74,7 +74,7 @@ app_ui <- function(request) {
                     ),
                     tabItem(
                         tabName = "settings",
-                        h2("General Settings")
+                        h2(i18n$t("General Settings"))
                     )
                 )
             ),

@@ -58,10 +58,11 @@ mod_single_analysis_ui <- function(id) {
                 selectInput(
                     ns("scale"),
                     i18n$t("Sentiment Scale"),
+                    # Need to call tolower()
                     choices = c(
-                        i18n$t("Categorical") = "categorical",
-                        i18n$t("Likert") = "likert",
-                        i18n$t("Numeric") = "numeric"
+                        i18n$t("Categorical"),
+                        i18n$t("Likert"),
+                        i18n$t("Numeric")
                     )
                 )
             ),

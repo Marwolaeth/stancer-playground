@@ -2,6 +2,7 @@
   "cultural_date_format": "%d.%m.%Y",
   "languages": ["en", "ru"],
   "translation": [
+    // General ----
     {
       "en": "Stance Analysis",
       "ru": "Анализ позиции"
@@ -34,6 +35,7 @@
       "en": "Prompt Editor",
       "ru": "Инструкции модели"
     },
+    // Chat Settings ----
     {
       "en": "LLM Provider",
       "ru": "Поставщик модели"
@@ -66,6 +68,7 @@
       "en": "No Key Detected",
       "ru": "API-ключ не установлен"
     },
+    // Single Analysis ----
     {
       "en": "Input Text",
       "ru": "Ввод текста"
@@ -137,6 +140,89 @@
     {
       "en": "Reasoning & Explanation",
       "ru": "Рассуждение и пояснение"
+    },
+    // Batch Analysis ----
+    {
+      "en": "Data Import",
+      "ru": "Импорт данных"
+    },
+    {
+      "en": "Upload Excel or CSV",
+      "ru": "Добавить Excel или CSV"
+    },
+    {
+        "en": "Browse...",
+        "ru": "Обзор…"
+    },
+    {
+        "en": "No file selected",
+        "ru": "Файл не выбран"
+    },
+    {
+      "en": "Use Example",
+      "ru": "Пример данных"
+    },
+    {
+      "en": "Batch Settings",
+      "ru": "Настройки"
+    },
+    {
+      "en": "Number of rows to analyse",
+      "ru": "Количество строк для анализа"
+    },
+    {
+      "en": "Start Batch Analysis",
+      "ru": "Запустить анализ"
+    },
+    {
+      "en": "Data Preview & Results",
+      "ru": "Просмотр результатов"
+    },
+    {
+      "en": "Column Mapping",
+      "ru": "Соответствие полей"
+    },
+    {
+      "en": "Text Column",
+      "ru": "Текст документа"
+    },
+    {
+      "en": "Target Column (Optional)",
+      "ru": "Объект тональности (Необязательно)"
+    },
+    {
+      "en": "Or Enter Manual Target",
+      "ru": "Или введите объект вручную"
+    },
+    // Reactable Labels ----
+    {
+      "en": "Search...",
+      "ru": "Поиск…"
+    },
+    {
+      "en": "No data found",
+      "ru": "Ничего не найдено"
+    },
+    {
+      "en": "Download Results (CSV)",
+      "ru": "Сохранить результат (CSV)"
+    },
+    // Interface Settings ----
+    {
+      "en": "Interface Settings",
+      "ru": "Настройки"
+    },
+    {
+      "en": "UI Language",
+      "ru": "Язык"
+    },
+    {
+      "en": "More settings coming soon...",
+      "ru": "Здесь будут другие настройки…"
+    },
+    {
+      "en": "General Settings",
+      "ru": "Настройки"
     }
   ]
 }

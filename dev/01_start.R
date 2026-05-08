@@ -19,16 +19,16 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ##
 golem::fill_desc(
-	pkg_name = "stancer_playground", # The name of the golem package containing the app (typically lowercase, no underscore or periods)
-	pkg_title = "PKG_TITLE", # What the Package Does (One Line, Title Case, No Period)
-	pkg_description = "PKG_DESC.", # What the package does (one paragraph).
+	pkg_name = "stancer.playground", # The name of the golem package containing the app (typically lowercase, no underscore or periods)
+	pkg_title = "Interactive Multi-Agent Stance Detection Dashboard",
+	pkg_description = "A professional Shiny interface for the {stancer} R package. It provides a playground for zero-shot stance detection using collaborative multi-agent LLM frameworks. Users can analyze single texts or batch-process datasets with customizable expert roles, reasoning extraction, and multi-language support.",
 	authors = person(
 		given = "Andrej", # Your First Name
 		family = "Pawluczenko", # Your Last Name
 		email = "a.pawluczenko@gmail.com", # Your email
 		role = c("aut", "cre") # Your role (here author/creator)
 	),
-	repo_url = NULL, # The URL of the GitHub repo (optional),
+	repo_url = "https://github.com/Marwolaeth/stancer-playground",
 	pkg_version = "0.0.0.9000", # The version of the package containing the app
 	set_options = TRUE # Set the global golem options
 )
@@ -53,6 +53,19 @@ golem::use_recommended_tests()
 # If you want to change the favicon (default is golem's one)
 golem::use_favicon('inst/app/www/logo.png') # path = "path/to/ico". Can be an online file.
 # golem::remove_favicon() # Uncomment to remove the default favicon
+
+usethis::use_package("stancer")
+usethis::use_package("shinydashboard")
+usethis::use_package("shinydashboardPlus")
+usethis::use_package("shinyjs")
+usethis::use_package("shiny.i18n")
+usethis::use_package("shinyWidgets")
+usethis::use_package("cookies")
+usethis::use_package("reactable")
+usethis::use_package("readr")
+usethis::use_package("readxl")
+usethis::use_package("ellmer")
+
 
 ## Add helper functions ----
 golem::use_utils_ui(with_test = TRUE)
