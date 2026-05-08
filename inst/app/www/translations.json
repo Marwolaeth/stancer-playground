@@ -1,0 +1,142 @@
+{
+  "cultural_date_format": "%d.%m.%Y",
+  "languages": ["en", "ru"],
+  "translation": [
+    {
+      "en": "Stance Analysis",
+      "ru": "Анализ позиции"
+    },
+    {
+      "en": "Model Configuration",
+      "ru": "Настройка модели"
+    },
+    {
+      "en": "Single Text",
+      "ru": "Один текст"
+    },
+    {
+      "en": "Batch Processing",
+      "ru": "Пакетная обработка"
+    },
+    {
+      "en": "API Key",
+      "ru": "API-ключ"
+    },
+    {
+      "en": "Analyse",
+      "ru": "Оценить"
+    },
+    {
+      "en": "Settings",
+      "ru": "Настройки"
+    },
+    {
+      "en": "Prompt Editor",
+      "ru": "Инструкции модели"
+    },
+    {
+      "en": "LLM Provider",
+      "ru": "Поставщик модели"
+    },
+    {
+      "en": "Select Provider",
+      "ru": "Выберите поставщика"
+    },
+    {
+      "en": "Model Name",
+      "ru": "Название модели"
+    },
+    {
+      "en": "Save key in cookies",
+      "ru": "Сохранить ключ в cookie"
+    },
+    {
+      "en": "Test Connection",
+      "ru": "Проверить соединение"
+    },
+    {
+      "en": "Using System Environment Key",
+      "ru": "Используется системный API-ключ"
+    },
+    {
+      "en": "Using Manual Key",
+      "ru": "Используется пользовательский API-ключ"
+    },
+    {
+      "en": "No Key Detected",
+      "ru": "API-ключ не установлен"
+    },
+    {
+      "en": "Input Text",
+      "ru": "Ввод текста"
+    },
+    {
+      "en": "Text to analyse",
+      "ru": "Текст для анализа"
+    },
+    {
+      "en": "Enter text here...",
+      "ru": "Введите текст…"
+    },
+    {
+      "en": "Target of analysis",
+      "ru": "Объект тональности"
+    },
+    {
+      "en": "Language",
+      "ru": "Язык анализа"
+    },
+    {
+      "en": "Expert Domain",
+      "ru": "Сфера экспертизы"
+    },
+    {
+      "en": "General Expert",
+      "ru": "Обозреватель"
+    },
+    {
+      "en": "Sociologist",
+      "ru": "Социолог"
+    },
+    {
+      "en": "Psychologist",
+      "ru": "Психолог"
+    },
+    {
+      "en": "Computer Scientist",
+      "ru": "Эксперт по информатике"
+    },
+    {
+      "en": "Programmer",
+      "ru": "Программист"
+    },
+    {
+      "en": "Political Scientist",
+      "ru": "Политолог"
+    },
+    {
+      "en": "Sentiment Scale",
+      "ru": "Шкала оценки"
+    },
+    {
+      "en": "Categorical",
+      "ru": "Тройная"
+    },
+    {
+      "en": "Likert",
+      "ru": "Шкала Ликерта"
+    },
+    {
+      "en": "Numeric",
+      "ru": "Числовая"
+    },
+    {
+      "en": "Detected Stance",
+      "ru": "Отношение"
+    },
+    {
+      "en": "Reasoning & Explanation",
+      "ru": "Рассуждение и пояснение"
+    }
+  ]
+}
