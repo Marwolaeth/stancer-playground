@@ -30,7 +30,13 @@ golem::add_utils("helpers", with_test = TRUE)
 
 ## External resources
 ## Creates .js and .css files at inst/app/www
+golem::add_resource_path(
+    "www",
+    system.file("app/www", package = "stancer.playground")
+)
+
 golem::add_js_file("script")
+golem::add_resource_path()
 golem::add_js_handler("handlers")
 golem::add_css_file("custom")
 golem::add_sass_file("custom")
@@ -64,6 +70,8 @@ covrpage::covrpage()
 ## (You'll need GitHub there)
 usethis::use_github()
 
+usethis::use_dev_package('stancer', remote = 'Marwolaeth/stancer')
+
 # GitHub Actions
 usethis::use_github_action()
 # Chose one of the three
@@ -83,6 +91,8 @@ usethis::use_jenkins()
 
 # GitLab CI
 usethis::use_gitlab_ci()
+
+golem::run_dev()
 
 # You're now set! ----
 # go to dev/03_deploy.R

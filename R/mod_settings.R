@@ -9,13 +9,14 @@ mod_settings_ui <- function(id) {
             shinyWidgets::pickerInput(
                 inputId = ns("selected_language"),
                 label = i18n$t("UI Language"),
-                choices = c("English" = "en", "Russian" = "ru"),
+                choices = c("English" = "en", "Русский" = "ru"),
                 choicesOpt = list(
                     content = c(
-                        tagList(img(src = "https://flagcdn.com/w20/gb.png", width = "20", style = "margin-right: 10px;"), "English"),
-                        tagList(img(src = "https://flagcdn.com/w20/ru.png", width = "20", style = "margin-right: 10px;"), "Русский")
+                        '<img src="https://flagcdn.com/w20/gb.png" width="20" style="margin-right: 10px;"/> English',
+                        '<img src="https://flagcdn.com/w20/ru.png" width="20" style="margin-right: 10px;"/> Русский'
                     )
-                )
+                ),
+                options = shinyWidgets::pickerOptions(html = TRUE)
             ),
 
             hr(),
@@ -30,9 +31,12 @@ mod_settings_server <- function(id) {
         ns <- session$ns
 
         # Наблюдатель за сменой языка
-        observeEvent(input$selected_language, {
-            shiny.i18n::update_lang(input$selected_language)
-        })
+        # observeEvent(input$selected_language, {
+        #     shiny.i18n::update_lang(
+        #         input$selected_language,
+        #         session = session
+        #     )
+        # })
 
         return(
             reactive({ input$selected_language })

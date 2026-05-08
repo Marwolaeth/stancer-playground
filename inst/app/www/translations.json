@@ -223,6 +223,10 @@
     {
       "en": "General Settings",
       "ru": "Настройки"
+    },
+    {
+      "en": "Language changed to",
+      "ru": "Язык изменен на:"
     }
   ]
 }

@@ -13,7 +13,7 @@ mod_single_analysis_ui <- function(id) {
                     ns("text"),
                     i18n$t("Text to analyse"),
                     rows = 5,
-                    placeholder = i18n$t("Enter text here...")
+                    placeholder = i18n.(i18n, "Enter text here...")
                 ),
                 fluidRow(column(
                     6, textInput(ns("target"), i18n$t("Target of analysis"), value = "R language")

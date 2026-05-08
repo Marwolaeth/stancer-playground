@@ -10,8 +10,7 @@
 app_ui <- function(request) {
     # Wrap UI with cookie handlers
     add_cookie_handlers(
-        dashboardPage(
-            title = "stancer playground",
+        dashboardPage(title = "stancer playground",
             header = dashboardHeader(title = tagList(
                 span(class = "logo-lg", "stancer playground"),
                 icon("balance-scale")
@@ -53,6 +52,7 @@ app_ui <- function(request) {
             body = dashboardBody(
                 # Инициализация shinyjs и i18n
                 shinyjs::useShinyjs(),
+                shiny.i18n::usei18n(i18n),
 
                 tabItems(
                     # Single Analysis Tab
@@ -74,7 +74,7 @@ app_ui <- function(request) {
                     ),
                     tabItem(
                         tabName = "settings",
-                        h2(i18n$t("General Settings"))
+                        mod_settings_ui("settings_1")
                     )
                 )
             ),

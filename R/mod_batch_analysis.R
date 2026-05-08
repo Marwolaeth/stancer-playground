@@ -13,7 +13,7 @@ mod_batch_analysis_ui <- function(id) {
                         i18n$t("Upload Excel or CSV"),
                         accept = c(".xlsx", ".xls", ".csv"),
                         buttonLabel = i18n$t("Browse..."),
-                        placeholder = i18n$t("No file selected"),
+                        placeholder = i18n.(i18n, "No file selected"),
                     ),
                     actionButton(ns("load_example"), i18n$t("Use Example"),
                                  icon = icon("lightbulb"), class = "btn-default btn-sm"),

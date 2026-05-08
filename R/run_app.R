@@ -15,8 +15,6 @@ run_app <- function(
 	uiPattern = "/",
 	...
 ) {
-    i18n <- Translator$new(translation_json_path = "translation.json")
-    i18n$set_translation_language("en")
 	with_golem_options(
 		app = shinyApp(
 			ui = app_ui,

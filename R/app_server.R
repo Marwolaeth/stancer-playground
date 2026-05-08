@@ -23,6 +23,9 @@ app_server <- function(input, output, session) {
 
     # Дополнительно: можно добавить уведомление при смене языка
     observeEvent(current_user_lang(), {
+        shiny.i18n::update_lang(current_user_lang(), session = session)
+
+        print(i18n)
         showNotification(
             paste(i18n$t("Language changed to"), current_user_lang()),
             type = "message"

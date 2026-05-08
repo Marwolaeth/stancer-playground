@@ -1,5 +1,5 @@
 #' model_config UI Function
-mod_model_config_ui <- function(id, i18n) {
+mod_model_config_ui <- function(id) {
     ns <- NS(id)
     tagList(
         div(
@@ -36,7 +36,7 @@ mod_model_config_ui <- function(id, i18n) {
 }
 
 #' model_config Server Functions
-mod_model_config_server <- function(id, i18n) {
+mod_model_config_server <- function(id) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
 
