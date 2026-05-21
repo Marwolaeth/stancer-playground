@@ -4,7 +4,7 @@
 \alias{mod_single_analysis_server}
 \title{single_analysis Server Functions}
 \usage{
-mod_single_analysis_server(id, settings_rx, i18n)
+mod_single_analysis_server(id, settings_rx, i18n_r)
 }
 \description{
 single_analysis Server Functions

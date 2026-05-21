@@ -15,6 +15,12 @@ run_app <- function(
 	uiPattern = "/",
 	...
 ) {
+    translations <- jsonlite::read_json(
+        path = "inst/app/www/translations.json",
+        simplifyDataFrame = TRUE
+    )$translation
+    row.names(translations) <- translations[["en"]]
+
 	with_golem_options(
 		app = shinyApp(
 			ui = app_ui,
@@ -28,7 +34,8 @@ run_app <- function(
 		    # Global Translator Object
 		    translator = shiny.i18n::Translator$new(
 		        translation_json_path = "inst/app/www/translations.json"
-		    )
+		    ),
+		    translations_df = translations
 		)
 	)
 }
