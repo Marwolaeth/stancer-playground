@@ -147,6 +147,3 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         })
     })
 }
-
-# Вспомогательный оператор, если его нет
-`%||%` <- function(x, y) if (is.null(x)) y else x
