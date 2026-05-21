@@ -1,5 +1,5 @@
 #' batch_analysis UI Function
-mod_batch_analysis_ui <- function(id) {
+mod_batch_analysis_ui <- function(id, i18n) {
     ns <- NS(id)
     tagList(
         fluidRow(
@@ -41,7 +41,7 @@ mod_batch_analysis_ui <- function(id) {
 }
 
 #' batch_analysis Server Functions
-mod_batch_analysis_server <- function(id, settings_rx) {
+mod_batch_analysis_server <- function(id, settings_rx, i18n) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
 

@@ -16,8 +16,16 @@
       "ru": "Один текст"
     },
     {
+      "en": "Single Analysis",
+      "ru": "Пример анализа"
+    },
+    {
       "en": "Batch Processing",
       "ru": "Пакетная обработка"
+    },
+    {
+      "en": "Batch Analysis",
+      "ru": "Анализ корпуса"
     },
     {
       "en": "API Key",

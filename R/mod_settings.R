@@ -1,5 +1,5 @@
 #' settings UI Function
-mod_settings_ui <- function(id) {
+mod_settings_ui <- function(id, i18n) {
     ns <- NS(id)
     tagList(
         box(
@@ -9,7 +9,8 @@ mod_settings_ui <- function(id) {
             shinyWidgets::pickerInput(
                 inputId = ns("selected_language"),
                 label = i18n$t("UI Language"),
-                choices = c("English" = "en", "Русский" = "ru"),
+                choices = i18n$get_languages(),
+                selected = i18n$get_key_translation(),
                 choicesOpt = list(
                     content = c(
                         '<img src="https://flagcdn.com/w20/gb.png" width="20" style="margin-right: 10px;"/> English',
@@ -30,7 +31,7 @@ mod_settings_server <- function(id) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
 
-        # Наблюдатель за сменой языка
+        # Language Observer
         # observeEvent(input$selected_language, {
         #     shiny.i18n::update_lang(
         #         input$selected_language,

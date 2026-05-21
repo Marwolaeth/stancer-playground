@@ -4,7 +4,7 @@
 \alias{mod_batch_analysis_server}
 \title{batch_analysis Server Functions}
 \usage{
-mod_batch_analysis_server(id, settings_rx)
+mod_batch_analysis_server(id, settings_rx, i18n)
 }
 \description{
 batch_analysis Server Functions

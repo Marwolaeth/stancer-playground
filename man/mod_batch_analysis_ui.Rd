@@ -4,7 +4,7 @@
 \alias{mod_batch_analysis_ui}
 \title{batch_analysis UI Function}
 \usage{
-mod_batch_analysis_ui(id)
+mod_batch_analysis_ui(id, i18n)
 }
 \description{
 batch_analysis UI Function

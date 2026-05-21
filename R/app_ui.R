@@ -8,6 +8,10 @@
 #' @import shiny.i18n
 #' @noRd
 app_ui <- function(request) {
+    i18n <- golem::get_golem_options(which = "translator")
+    i18n$set_translation_language("en")
+    i18n$use_js()
+
     # Wrap UI with cookie handlers
     add_cookie_handlers(
         dashboardPage(title = "stancer playground",
@@ -45,12 +49,10 @@ app_ui <- function(request) {
             controlbar = dashboardControlbar(
                 id = "controlbar",
                 width = 300,
-                # Здесь будет модуль mod_model_config_ui
-                mod_model_config_ui("model_config_1")
+                mod_model_config_ui("model_config_1", i18n)
             ),
 
             body = dashboardBody(
-                # Инициализация shinyjs и i18n
                 shinyjs::useShinyjs(),
                 shiny.i18n::usei18n(i18n),
 
@@ -58,13 +60,13 @@ app_ui <- function(request) {
                     # Single Analysis Tab
                     tabItem(
                         tabName = "single",
-                        mod_single_analysis_ui("single_analysis_1")
+                        mod_single_analysis_ui("single_analysis_1", i18n)
                     ),
 
                     # Batch Analysis Tab
                     tabItem(
                         tabName = "batch",
-                        mod_batch_analysis_ui("batch_analysis_1")
+                        mod_batch_analysis_ui("batch_analysis_1", i18n)
                     ),
 
                     # Placeholder tabs
@@ -74,7 +76,7 @@ app_ui <- function(request) {
                     ),
                     tabItem(
                         tabName = "settings",
-                        mod_settings_ui("settings_1")
+                        mod_settings_ui("settings_1", i18n)
                     )
                 )
             ),

@@ -4,7 +4,7 @@
 \alias{mod_model_config_server}
 \title{model_config Server Functions}
 \usage{
-mod_model_config_server(id)
+mod_model_config_server(id, i18n)
 }
 \description{
 model_config Server Functions

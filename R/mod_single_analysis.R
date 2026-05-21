@@ -1,6 +1,9 @@
 #' single_analysis UI Function
-mod_single_analysis_ui <- function(id) {
+mod_single_analysis_ui <- function(id, i18n) {
     ns <- NS(id)
+
+    # i18n <- i18n()
+
     tagList(fluidRow(
         column(
             width = 8,
@@ -13,7 +16,7 @@ mod_single_analysis_ui <- function(id) {
                     ns("text"),
                     i18n$t("Text to analyse"),
                     rows = 5,
-                    placeholder = i18n.(i18n, "Enter text here...")
+                    placeholder = i18n$t("Enter text here...")$children[[1]]
                 ),
                 fluidRow(column(
                     6, textInput(ns("target"), i18n$t("Target of analysis"), value = "R language")
@@ -43,27 +46,51 @@ mod_single_analysis_ui <- function(id) {
                 title = i18n$t("Settings"),
                 width = NULL,
                 status = "warning",
-                selectInput(
+                shinyWidgets::pickerInput(
                     ns("domain"),
                     i18n$t("Expert Domain"),
                     choices = c(
-                        i18n$t("General Expert"),
-                        i18n$t("Sociologist"),
-                        i18n$t("Psychologist"),
-                        i18n$t("Computer Scientist"),
-                        i18n$t("Programmer"),
-                        i18n$t("Political Scientist")
-                    )
+                        i18n.(i18n, "General Expert"),
+                        i18n.(i18n, "Sociologist"),
+                        i18n.(i18n, "Psychologist"),
+                        i18n.(i18n, "Computer Scientist"),
+                        i18n.(i18n, "Programmer"),
+                        i18n.(i18n, "Political Scientist")
+                    ),
+                    choicesOpt = list(
+                        content = sapply(
+                            list(
+                                i18n$t("General Expert"),
+                                i18n$t("Sociologist"),
+                                i18n$t("Psychologist"),
+                                i18n$t("Computer Scientist"),
+                                i18n$t("Programmer"),
+                                i18n$t("Political Scientist")
+                            ),
+                            as.character
+                        )
+                    ),
+                    options = shinyWidgets::pickerOptions(html = TRUE)
                 ),
-                selectInput(
+                shinyWidgets::pickerInput(
                     ns("scale"),
                     i18n$t("Sentiment Scale"),
-                    # Need to call tolower()
                     choices = c(
-                        i18n$t("Categorical"),
-                        i18n$t("Likert"),
-                        i18n$t("Numeric")
-                    )
+                        "Categorical" = "categorical",
+                        "Likert" = "likert",
+                        "Numeric" = "numeric"
+                    ),
+                    choicesOpt = list(
+                        content = sapply(
+                            list(
+                                i18n$t("Categorical"),
+                                i18n$t("Likert"),
+                                i18n$t("Numeric")
+                            ),
+                            as.character
+                        )
+                    ),
+                    options = shinyWidgets::pickerOptions(html = TRUE)
                 )
             ),
             # Финальный результат (Gauge или Label)
@@ -73,7 +100,7 @@ mod_single_analysis_ui <- function(id) {
 }
 
 #' single_analysis Server Functions
-mod_single_analysis_server <- function(id, settings_rx) {
+mod_single_analysis_server <- function(id, settings_rx, i18n) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
 

@@ -4,7 +4,7 @@
 \alias{mod_settings_ui}
 \title{settings UI Function}
 \usage{
-mod_settings_ui(id)
+mod_settings_ui(id, i18n)
 }
 \description{
 settings UI Function

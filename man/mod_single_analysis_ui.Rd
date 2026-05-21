@@ -4,7 +4,7 @@
 \alias{mod_single_analysis_ui}
 \title{single_analysis UI Function}
 \usage{
-mod_single_analysis_ui(id)
+mod_single_analysis_ui(id, i18n)
 }
 \description{
 single_analysis UI Function

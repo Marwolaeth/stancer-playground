@@ -4,7 +4,7 @@
 \alias{mod_model_config_ui}
 \title{model_config UI Function}
 \usage{
-mod_model_config_ui(id)
+mod_model_config_ui(id, i18n)
 }
 \description{
 model_config UI Function
