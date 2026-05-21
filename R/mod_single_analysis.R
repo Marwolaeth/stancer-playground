@@ -2,8 +2,6 @@
 mod_single_analysis_ui <- function(id, i18n) {
     ns <- NS(id)
 
-    # i18n <- i18n()
-
     tagList(fluidRow(
         column(
             width = 8,
@@ -50,12 +48,12 @@ mod_single_analysis_ui <- function(id, i18n) {
                     ns("domain"),
                     i18n$t("Expert Domain"),
                     choices = c(
-                        i18n.(i18n, "General Expert"),
-                        i18n.(i18n, "Sociologist"),
-                        i18n.(i18n, "Psychologist"),
-                        i18n.(i18n, "Computer Scientist"),
-                        i18n.(i18n, "Programmer"),
-                        i18n.(i18n, "Political Scientist")
+                        "General Expert",
+                        "Sociologist",
+                        "Psychologist",
+                        "Computer Scientist",
+                        "Programmer",
+                        "Political Scientist"
                     ),
                     choicesOpt = list(
                         content = sapply(
@@ -125,8 +123,8 @@ mod_single_analysis_server <- function(id, settings_rx, i18n) {
         output$stance_box <- renderValueBox({
             res <- result()
             valueBox(
-                res$label,
-                i18n$t("Detected Stance"),
+                res$stance,
+                i18n()$t("Detected Stance"),
                 icon = icon("balance-scale"),
                 color = "green"
             )
@@ -135,7 +133,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n) {
         output$explanation_ui <- renderUI({
             res <- result()
             box(
-                title = i18n$t("Reasoning & Explanation"),
+                title = i18n()$t("Reasoning & Explanation"),
                 width = NULL,
                 status = "info",
                 p(res$explanation, style = "font-style: italic; font-size: 1.1em; color: #2c3e50;")

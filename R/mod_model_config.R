@@ -62,7 +62,7 @@ mod_model_config_server <- function(id, i18n) {
 
             if (has_env) {
                 span(icon("check-circle"),
-                     i18n$t("Using System Environment Key"),
+                     i18n()$t("Using System Environment Key"),
                      style = "color: green; font-size: 0.8em;"
                     )
             } else if (nchar(input$api_key) > 0) {
