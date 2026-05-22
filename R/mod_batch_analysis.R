@@ -8,13 +8,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
                 width = 4,
                 box(
                     title = i18n$t("Data Import"), width = NULL, status = "primary", solidHeader = TRUE,
-                    fileInput(
-                        ns("file_input"),
-                        i18n$t("Upload Excel or CSV"),
-                        accept = c(".xlsx", ".xls", ".csv"),
-                        buttonLabel = i18n$t("Browse..."),
-                        placeholder = i18n.(i18n, "No file selected"),
-                    ),
+                    uiOutput(ns("file_import_ui")),
                     actionButton(ns("load_example"), i18n$t("Use Example"),
                                  icon = icon("lightbulb"), class = "btn-default btn-sm"),
                     hr(),
@@ -41,9 +35,21 @@ mod_batch_analysis_ui <- function(id, i18n) {
 }
 
 #' batch_analysis Server Functions
-mod_batch_analysis_server <- function(id, settings_rx, i18n) {
+mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+
+        output$file_import_ui <- renderUI({
+            fileInput(
+                ns("file_input"),
+                label = i18n_r()$t("Upload Excel or CSV"),
+                accept = c(".xlsx", ".xls", ".csv"),
+                buttonLabel = i18n_r()$t("Browse..."),
+                placeholder = as.character(
+                    i18n_r()$t("No file selected")
+                )
+            )
+        })
 
         # 1. Реактивное хранилище данных
         raw_data <- reactiveVal(NULL)
@@ -70,11 +76,11 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n) {
             cols <- colnames(raw_data())
 
             tagList(
-                h4(i18n$t("Column Mapping")),
-                selectInput(ns("col_text"), i18n$t("Text Column"), choices = cols),
-                selectInput(ns("col_target"), i18n$t("Target Column (Optional)"),
+                h4(i18n_r()$t("Column Mapping")),
+                selectInput(ns("col_text"), i18n_r()$t("Text Column"), choices = cols),
+                selectInput(ns("col_target"), i18n_r()$t("Target Column (Optional)"),
                             choices = c("-" = "", cols)),
-                textInput(ns("manual_target"), i18n$t("Or Enter Manual Target"), value = "")
+                textInput(ns("manual_target"), i18n_r()$t("Or Enter Manual Target"), value = "")
             )
         })
 
@@ -101,8 +107,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n) {
                 highlight = TRUE,
                 searchable = TRUE,
                 language = reactable::reactableLang(
-                    searchPlaceholder = i18n$t("Search..."),
-                    noData = i18n$t("No data found")
+                    searchPlaceholder = i18n_r()$t("Search..."),
+                    noData = i18n_r()$t("No data found")
                 )
             )
         })
@@ -110,7 +116,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n) {
         # 5. Кнопка скачивания
         output$download_ui <- renderUI({
             req(processed_data())
-            downloadButton(ns("download_results"), i18n$t("Download Results (CSV)"), class = "btn-primary")
+            downloadButton(ns("download_results"), i18n_r()$t("Download Results (CSV)"), class = "btn-primary")
         })
 
         output$download_results <- downloadHandler(
