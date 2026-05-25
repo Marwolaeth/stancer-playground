@@ -15,7 +15,15 @@ mod_batch_analysis_ui <- function(id, i18n) {
                     uiOutput(ns("column_mapping_ui"))
                 ),
                 box(
-                    title = i18n$t("Batch Settings"), width = NULL, status = "warning",
+                    title = i18n$t("Analysis Parameters"), width = NULL, status = "warning",
+                    solidHeader = FALSE, collapsible = TRUE, collapsed = FALSE,
+                    selectInput(
+                        ns("lang"),
+                        i18n$t("Analysis Language"),
+                        choices = c("English" = "en", "Russian" = "ru")
+                    ),
+                    uiOutput(ns("domain_ui")),
+                    uiOutput(ns("scale_ui")),
                     numericInput(ns("n_rows"), i18n$t("Number of rows to analyse"), value = 6, min = 1, max = 20),
                     actionButton(ns("run_batch"), i18n$t("Start Batch Analysis"),
                                  class = "btn-success btn-lg", icon = icon("play-circle"), width = "100%")
@@ -38,6 +46,8 @@ mod_batch_analysis_ui <- function(id, i18n) {
 mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+
+        tdf <- golem::get_golem_options("translations_df")
 
         output$file_import_ui <- renderUI({
             fileInput(
@@ -83,6 +93,50 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 textInput(ns("manual_target"), i18n_r()$t("Or Enter Manual Target"), value = "")
             )
         })
+
+        output$domain_ui <- renderUI({
+            current_domain <- isolate(input$domain)
+
+            roles <- c(
+                "General Expert",
+                "Sociologist",
+                "Psychologist",
+                "Computer Scientist",
+                "Programmer",
+                "Political Scientist"
+            )
+
+            # Переводим лейблы ролей через i18n_r
+            role_labels <- sapply(roles, function(x)
+                tdf[x, input$lang]
+            )
+            names(roles) <- role_labels
+
+            selectInput(
+                ns("domain"),
+                i18n_r()$t("Expert Domain"),
+                choices = roles,
+                selected = current_domain
+            )
+        })
+
+        output$scale_ui <- renderUI({
+            current_scale <- isolate(input$scale)
+
+            scales <- c("categorical", "likert", "numeric")
+            scale_labels <- sapply(scales, function(x)
+                as.character(i18n_r()$t(tools::toTitleCase(x))))
+            names(scales) <- scale_labels
+
+            selectInput(
+                ns("scale"),
+                i18n_r()$t("Sentiment Scale"),
+                choices = scales,
+                selected = current_scale
+            )
+        })
+
+
 
         # 3. Анализ (Заглушка для интеграции с stancer)
         processed_data <- eventReactive(input$run_batch, {

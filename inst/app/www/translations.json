@@ -94,7 +94,7 @@
       "ru": "Объект тональности"
     },
     {
-      "en": "Language",
+      "en": "Analysis Language",
       "ru": "Язык анализа"
     },
     {
@@ -173,6 +173,10 @@
     {
       "en": "Batch Settings",
       "ru": "Настройки"
+    },
+    {
+      "en": "Analysis Parameters",
+      "ru": "Параметры анализа"
     },
     {
       "en": "Number of rows to analyse",

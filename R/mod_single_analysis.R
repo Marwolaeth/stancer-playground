@@ -17,7 +17,7 @@ mod_single_analysis_ui <- function(id, i18n) {
                 ), column(
                     6, selectInput(
                         ns("lang"),
-                        i18n$t("Language"),
+                        i18n$t("Analysis Language"),
                         choices = c(
                             "English" = "en",
                             "Russian" = "ru"
