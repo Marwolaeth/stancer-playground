@@ -24,19 +24,25 @@ mod_batch_analysis_ui <- function(id, i18n) {
                     ),
                     uiOutput(ns("domain_ui")),
                     uiOutput(ns("scale_ui")),
-                    numericInput(ns("n_rows"), i18n$t("Number of rows to analyse"), value = 6, min = 1, max = 20),
-                    actionButton(ns("run_batch"), i18n$t("Start Batch Analysis"),
-                                 class = "btn-success btn-lg", icon = icon("play-circle"), width = "100%")
-                )
+                    numericInput(
+                        ns("n_rows"),
+                        i18n$t("Number of rows to analyse"),
+                        value = 6, min = 1, max = 20
+                    )
+                ),
+                uiOutput(ns("batch_actions_ui"))
             ),
             # Правая колонка: Просмотр данных и результатов
             column(
                 width = 8,
                 box(
-                    title = i18n$t("Data and Results"), width = NULL, status = "info",
+                    title = i18n$t("Data and Results"),
+                    width = NULL, status = "info",
                     reactable::reactableOutput(ns("data_table"))
                 ),
-                uiOutput(ns("download_ui"))
+                uiOutput(ns("download_ui")),
+                br(),
+                uiOutput(ns("metrics_ui"))
             )
         )
     )
@@ -87,10 +93,29 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
 
             tagList(
                 h4(i18n_r()$t("Column Mapping")),
-                selectInput(ns("col_text"), i18n_r()$t("Text Column"), choices = cols),
-                selectInput(ns("col_target"), i18n_r()$t("Target Column (Optional)"),
-                            choices = c("-" = "", cols)),
-                textInput(ns("manual_target"), i18n_r()$t("Or Enter Manual Target"), value = "")
+                selectInput(
+                    ns("col_text"),
+                    i18n_r()$t("Text Column"),
+                    choices = cols
+                ),
+                selectInput(
+                    ns("col_target"),
+                    i18n_r()$t("Target Column (Optional)"),
+                    choices = c("-" = "", cols)
+                ),
+                textInput(
+                    ns("manual_target"),
+                    i18n_r()$t("Or Enter Manual Target"),
+                    value = ""
+                ),
+                selectInput(
+                    ns("col_true"),
+                    i18n_r()$t("True Labels Column (Optional)"),
+                    c("-" = "", cols)
+                ),
+                helpText(
+                    i18n_r()$t("If True Labels are provided, scoring metrics will be available.")
+                )
             )
         })
 
@@ -136,7 +161,29 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        output$batch_actions_ui <- renderUI({
+            req(raw_data())
 
+            tagList(
+                actionButton(
+                    ns("run_batch"),
+                    i18n_r()$t("Run Analysis"),
+                    class = "btn-success btn-lg",
+                    icon = icon("rocket"),
+                    width = "100%"
+                ),
+                # Scoring button only active if true labels provided
+                if (!is.null(input$col_true) && input$col_true != "") {
+                    actionButton(
+                        ns("run_score"),
+                        i18n_r()$t("Calculate Metrics"),
+                        class = "btn-info btn-block",
+                        icon = icon("chart-line"),
+                        style = "margin-top:12px;"
+                    )
+                }
+            )
+        })
 
         # 3. Анализ (Заглушка для интеграции с stancer)
         processed_data <- eventReactive(input$run_batch, {
@@ -177,5 +224,47 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             filename = function() { paste0("stancer-results-", Sys.Date(), ".csv") },
             content = function(file) { readr::write_csv(processed_data(), file) }
         )
+
+        output$metrics_ui <- renderUI({
+            req(metrics_data()) # Реактивное значение с результатами расчетов
+
+            m <- metrics_data()
+
+            fluidRow(
+                infoBox(
+                    i18n_r()$t("Accuracy"),
+                    paste0(round(m$accuracy * 100, 1), "%"),
+                    icon = icon("check"),
+                    color = "green",
+                    fill = TRUE,
+                    width = 4
+                ),
+                infoBox(
+                    i18n_r()$t("F1-Score"),
+                    round(m$f1, 3),
+                    icon = icon("bullseye"),
+                    color = "purple",
+                    fill = TRUE,
+                    width = 4
+                ),
+                infoBox(
+                    i18n_r()$t("Samples"),
+                    m$n,
+                    icon = icon("database"),
+                    color = "blue",
+                    fill = TRUE,
+                    width = 4
+                )
+            )
+        })
+
+        metrics_data <- eventReactive(input$run_score, {
+            # Здесь будет вызов функции из вашего пакета, например:
+            # stancer::evaluate_performance(results_df, true_col = input$col_true, pred_col = "stance")
+
+            # Мок-данные для демонстрации
+            list(accuracy = 0.85, f1 = 0.824, n = input$n_rows)
+        })
+
     })
 }

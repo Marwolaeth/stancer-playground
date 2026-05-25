@@ -183,7 +183,7 @@
       "ru": "Количество строк для анализа"
     },
     {
-      "en": "Start Batch Analysis",
+      "en": "Run Analysis",
       "ru": "Запустить анализ"
     },
     {
@@ -205,6 +205,30 @@
     {
       "en": "Or Enter Manual Target",
       "ru": "Или введите объект вручную"
+    },
+    {
+      "en": "True Labels Column (Optional)",
+      "ru": "Истинные метки (Необязательно)"
+    },
+    {
+      "en": "If True Labels are provided, scoring metrics will be available.",
+      "ru": "Добавьте истинные метки, чтобы оценить качество анализа."
+    },
+    {
+      "en": "Calculate Metrics",
+      "ru": "Оценить качество"
+    },
+    {
+      "en": "Accuracy",
+      "ru": "Точность"
+    },
+    {
+      "en": "F1-Score",
+      "ru": "F1-мера"
+    },
+    {
+      "en": "Samples",
+      "ru": "Выборка"
     },
     // Reactable Labels ----
     {
