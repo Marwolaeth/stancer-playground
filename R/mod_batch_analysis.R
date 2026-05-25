@@ -3,20 +3,29 @@ mod_batch_analysis_ui <- function(id, i18n) {
     ns <- NS(id)
     tagList(
         fluidRow(
-            # Левая колонка: Загрузка и настройки
+            # Left: Inputs & Settings ----
             column(
                 width = 4,
+                ## Load Data ----
                 box(
-                    title = i18n$t("Data Import"), width = NULL, status = "danger", solidHeader = TRUE,
+                    title = i18n$t("Data Import"),
+                    width = NULL, status = "danger", solidHeader = TRUE,
                     uiOutput(ns("file_import_ui")),
-                    actionButton(ns("load_example"), i18n$t("Use Example"),
-                                 icon = icon("lightbulb"), class = "btn-default btn-sm"),
+                    actionButton(
+                        ns("load_example"),
+                        i18n$t("Use Example"),
+                        icon = icon("lightbulb"),
+                        class = "btn-default btn-sm"
+                    ),
                     hr(),
                     uiOutput(ns("column_mapping_ui"))
                 ),
+                ## Analysis Parameters ----
                 box(
-                    title = i18n$t("Analysis Parameters"), width = NULL, status = "warning",
-                    solidHeader = FALSE, collapsible = TRUE, collapsed = FALSE,
+                    title = i18n$t("Analysis Parameters"),
+                    width = NULL, status = "warning",
+                    solidHeader = FALSE,
+                    collapsible = TRUE, collapsed = FALSE,
                     selectInput(
                         ns("lang"),
                         i18n$t("Analysis Language"),
@@ -30,9 +39,10 @@ mod_batch_analysis_ui <- function(id, i18n) {
                         value = 6, min = 1, max = 20
                     )
                 ),
+                ## Actions ----
                 uiOutput(ns("batch_actions_ui"))
             ),
-            # Правая колонка: Просмотр данных и результатов
+            # Right: Data & Results ----
             column(
                 width = 8,
                 box(
@@ -55,6 +65,9 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
 
         tdf <- golem::get_golem_options("translations_df")
 
+        # Inputs & Settings ----
+        ## Load Data ----
+        ### File Import ----
         output$file_import_ui <- renderUI({
             fileInput(
                 ns("file_input"),
@@ -67,10 +80,10 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 1. Реактивное хранилище данных
+        #### Data Container ----
         raw_data <- reactiveVal(NULL)
 
-        # Загрузка файла
+        #### Import Button ----
         observeEvent(input$file_input, {
             ext <- tools::file_ext(input$file_input$datapath)
             df <- if(ext == "csv") {
@@ -81,12 +94,12 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             raw_data(df)
         })
 
-        # Загрузка примера из пакета stancer
+        ### Example Data ----
         observeEvent(input$load_example, {
             raw_data(stancer::programming_tweets)
         })
 
-        # 2. Динамический интерфейс маппинга колонок
+        ### Column Mapping ----
         output$column_mapping_ui <- renderUI({
             req(raw_data())
             cols <- colnames(raw_data())
@@ -114,11 +127,15 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     c("-" = "", cols)
                 ),
                 helpText(
-                    i18n_r()$t("If True Labels are provided, scoring metrics will be available.")
+                    i18n_r()$t(
+                        "If True Labels are provided, scoring metrics will be available."
+                    )
                 )
             )
         })
 
+        ## Settings ----
+        ### Domain Roles ----
         output$domain_ui <- renderUI({
             current_domain <- isolate(input$domain)
 
@@ -131,7 +148,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 "Political Scientist"
             )
 
-            # Переводим лейблы ролей через i18n_r
+            # Translate using database, not i18n
+            ## BC depends on analysis language, not UI language
             role_labels <- sapply(roles, function(x)
                 tdf[x, input$lang]
             )
@@ -145,6 +163,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        ### Scales ----
         output$scale_ui <- renderUI({
             current_scale <- isolate(input$scale)
 
@@ -161,10 +180,12 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        # Actions ----
         output$batch_actions_ui <- renderUI({
             req(raw_data())
 
             tagList(
+                ## Run Analysis ----
                 actionButton(
                     ns("run_batch"),
                     i18n_r()$t("Run Analysis"),
@@ -172,6 +193,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     icon = icon("rocket"),
                     width = "100%"
                 ),
+                # Score ----
                 # Scoring button only active if true labels provided
                 if (!is.null(input$col_true) && input$col_true != "") {
                     actionButton(
@@ -185,19 +207,19 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 3. Анализ (Заглушка для интеграции с stancer)
+        # Stance Analysis ----
         processed_data <- eventReactive(input$run_batch, {
             req(raw_data())
             df <- head(raw_data(), input$n_rows)
 
-            # Здесь будет вызов stancer::llm_stance(df, ...)
-            # Для примера добавим колонки имитации
+            # stancer::llm_stance(df, ...)
             df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
             df$explanation <- "Batch analysis explanation placeholder..."
             df
         })
 
-        # 4. Отображение таблицы
+        # Data & Results ----
+        ## Data Preview ----
         output$data_table <- reactable::renderReactable({
             display_df <- if (!is.null(processed_data())) processed_data() else raw_data()
             req(display_df)
@@ -207,6 +229,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 pagination = TRUE,
                 highlight = TRUE,
                 searchable = TRUE,
+                paginationType = "simple",
                 language = reactable::reactableLang(
                     searchPlaceholder = i18n_r()$t("Search..."),
                     noData = i18n_r()$t("No data found")
@@ -214,7 +237,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 5. Кнопка скачивания
+        ### Download ----
         output$download_ui <- renderUI({
             req(processed_data())
             downloadButton(ns("download_results"), i18n_r()$t("Download Results (CSV)"), class = "btn-danger")
@@ -225,8 +248,10 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             content = function(file) { readr::write_csv(processed_data(), file) }
         )
 
+        ## Metrics ----
+        ### Display Metrics ----
         output$metrics_ui <- renderUI({
-            req(metrics_data()) # Реактивное значение с результатами расчетов
+            req(metrics_data()) # Reactive
 
             m <- metrics_data()
 
@@ -258,12 +283,19 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        ### Calculate Metrics ----
         metrics_data <- eventReactive(input$run_score, {
-            # Здесь будет вызов функции из вашего пакета, например:
-            # stancer::evaluate_performance(results_df, true_col = input$col_true, pred_col = "stance")
+            req(processed_data())
+            df <- processed_data()
 
-            # Мок-данные для демонстрации
-            list(accuracy = 0.85, f1 = 0.824, n = input$n_rows)
+            acc <- metric_accuracy(
+                df$stance, df[[input$col_true]]
+            ) |> round(3)
+
+            f1 <- metric_f1(df$stance, df[[input$col_true]]) |> round(3)
+
+            # Mock
+            list(accuracy = acc, f1 = f1, n = nrow(df))
         })
 
     })
