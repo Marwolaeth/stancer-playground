@@ -3,17 +3,31 @@ metric_accuracy <- function(y_hat, y) {
     mean(y_hat == y)
 }
 
-metric_f1 <- function(y_hat, y) {
+metric_f1 <- function(
+        y_hat, y,
+        scale = c("categorical", "likert"),
+        score = c("micro", "macro")
+    ) {
     stopifnot(length(y_hat) == length(y))
+    scale <- match.arg(scale, c("categorical", "likert"), several.ok = FALSE)
+    score <- match.arg(score, c("micro", "macro"), several.ok = FALSE)
+
+    # Factor levels (hard-coded)
+    levels <- switch(
+        scale,
+        categorical = c("Negative", "Neutral", "Positive"),
+        likert = c(
+            "Strongly Disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly Agree"
+        )
+    )
+    if(!is.factor(y)) y <- factor(y, levels = levels, ordered = TRUE)
+    if(!is.factor(y_hat)) y_hat <- factor(y_hat, levels = levels, ordered = TRUE)
 
     # Confusion matrix
-    if (is.factor(y_hat)) {
-        levels <- levels(y_hat)
-    } else {
-        levels <- sort(unique(y_hat), decreasing = FALSE)
-        y_hat <- factor(y_hat, levels = levels)
-    }
-    y <- factor(y, levels = levels)
     cm <- table(Predicted = y_hat, Actual = y)
 
     # Base Metrics
@@ -30,8 +44,9 @@ metric_f1 <- function(y_hat, y) {
     f1 <- 2 * (precision * recall) / (precision + recall + 1e-9)
 
     ### MACRO F1-SCORE
-    macro_f1 <- mean(f1)
-    cat("Macro F1-Score:", round(macro_f1, 4), "\n")
+    # (ignore empty classes)
+    macro_f1 <- mean(f1[colSums(cm) > 0])
+    if (score == "macro") return(macro_f1)
 
     ### MICRO F1-SCORE (using all observations)
     t_TP <- sum(TP)
@@ -42,8 +57,6 @@ metric_f1 <- function(y_hat, y) {
     micro_recall    <- t_TP / (t_TP + t_FN + 1e-9)
     micro_f1        <- 2 * (micro_precision * micro_recall) /
         (micro_precision + micro_recall + 1e-9)
-
-    cat("Micro F1-Score:", round(micro_f1, 4), "\n")
 
     return(micro_f1)
 }

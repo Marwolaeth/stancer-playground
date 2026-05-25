@@ -215,6 +215,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             # stancer::llm_stance(df, ...)
             df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
             df$explanation <- "Batch analysis explanation placeholder..."
+            # To be used with metric_f1()
+            attr(df, "scale") <- input$scale
             df
         })
 
@@ -240,12 +242,20 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         ### Download ----
         output$download_ui <- renderUI({
             req(processed_data())
-            downloadButton(ns("download_results"), i18n_r()$t("Download Results (CSV)"), class = "btn-danger")
+            downloadButton(
+                ns("download_results"),
+                i18n_r()$t("Download Results (CSV)"),
+                class = "btn-danger"
+            )
         })
 
         output$download_results <- downloadHandler(
-            filename = function() { paste0("stancer-results-", Sys.Date(), ".csv") },
-            content = function(file) { readr::write_csv(processed_data(), file) }
+            filename = function() {
+                paste0("stancer-results-", Sys.Date(), ".csv")
+            },
+            content = function(file) {
+                readr::write_csv(processed_data(), file)
+            }
         )
 
         ## Metrics ----
@@ -292,7 +302,10 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 df$stance, df[[input$col_true]]
             ) |> round(3)
 
-            f1 <- metric_f1(df$stance, df[[input$col_true]]) |> round(3)
+            f1 <- metric_f1(
+                df$stance, df[[input$col_true]],
+                scale = attr(df, "scale")
+            ) |> round(3)
 
             # Mock
             list(accuracy = acc, f1 = f1, n = nrow(df))
