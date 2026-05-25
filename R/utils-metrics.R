@@ -6,11 +6,11 @@ metric_accuracy <- function(y_hat, y) {
 metric_f1 <- function(
         y_hat, y,
         scale = c("categorical", "likert"),
-        score = c("micro", "macro")
+        score = c("macro", "micro")
     ) {
     stopifnot(length(y_hat) == length(y))
     scale <- match.arg(scale, c("categorical", "likert"), several.ok = FALSE)
-    score <- match.arg(score, c("micro", "macro"), several.ok = FALSE)
+    score <- match.arg(score, c("macro", "micro"), several.ok = FALSE)
 
     # Factor levels (hard-coded)
     levels <- switch(
