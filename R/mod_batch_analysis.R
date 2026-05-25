@@ -7,7 +7,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
             column(
                 width = 4,
                 box(
-                    title = i18n$t("Data Import"), width = NULL, status = "primary", solidHeader = TRUE,
+                    title = i18n$t("Data Import"), width = NULL, status = "danger", solidHeader = TRUE,
                     uiOutput(ns("file_import_ui")),
                     actionButton(ns("load_example"), i18n$t("Use Example"),
                                  icon = icon("lightbulb"), class = "btn-default btn-sm"),
@@ -25,7 +25,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
             column(
                 width = 8,
                 box(
-                    title = i18n$t("Data Preview & Results"), width = NULL, status = "info",
+                    title = i18n$t("Data and Results"), width = NULL, status = "info",
                     reactable::reactableOutput(ns("data_table"))
                 ),
                 uiOutput(ns("download_ui"))
@@ -116,7 +116,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         # 5. Кнопка скачивания
         output$download_ui <- renderUI({
             req(processed_data())
-            downloadButton(ns("download_results"), i18n_r()$t("Download Results (CSV)"), class = "btn-primary")
+            downloadButton(ns("download_results"), i18n_r()$t("Download Results (CSV)"), class = "btn-danger")
         })
 
         output$download_results <- downloadHandler(

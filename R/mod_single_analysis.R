@@ -7,7 +7,7 @@ mod_single_analysis_ui <- function(id, i18n) {
             box(
                 title = i18n$t("Input Text"),
                 width = NULL,
-                status = "primary",
+                status = "danger",
                 solidHeader = TRUE,
                 # Dynamic text input
                 uiOutput(ns("text_input_ui")),

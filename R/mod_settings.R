@@ -3,7 +3,7 @@ mod_settings_ui <- function(id, i18n) {
     ns <- NS(id)
     tagList(
         box(
-            title = i18n$t("Interface Settings"), width = 6, status = "primary",
+            title = i18n$t("Interface Settings"), width = 6, status = "danger",
 
             # Выбор языка с флагами
             shinyWidgets::pickerInput(

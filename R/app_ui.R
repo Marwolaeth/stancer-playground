@@ -15,6 +15,7 @@ app_ui <- function(request) {
     tagList(
         golem_add_external_resources(),
         dashboardPage(title = "stancer playground",
+                      skin = "red",
                       header = dashboardHeader(title = tagList(
                           span(class = "logo-lg", "stancer playground"),
                           icon("balance-scale")
