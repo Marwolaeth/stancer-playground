@@ -3,14 +3,9 @@ metric_accuracy <- function(y_hat, y) {
     mean(y_hat == y)
 }
 
-metric_f1 <- function(
-        y_hat, y,
-        scale = c("categorical", "likert"),
-        score = c("macro", "micro")
-    ) {
+cm <- function(y_hat, y, scale = c("categorical", "likert")) {
     stopifnot(length(y_hat) == length(y))
     scale <- match.arg(scale, c("categorical", "likert"), several.ok = FALSE)
-    score <- match.arg(score, c("macro", "micro"), several.ok = FALSE)
 
     # Factor levels (hard-coded)
     levels <- switch(
@@ -28,7 +23,12 @@ metric_f1 <- function(
     if(!is.factor(y_hat)) y_hat <- factor(y_hat, levels = levels, ordered = TRUE)
 
     # Confusion matrix
-    cm <- table(Predicted = y_hat, Actual = y)
+    table(Predicted = y_hat, Actual = y)
+}
+
+metric_f1 <- function(cm, score = c("macro", "micro")) {
+    stopifnot(nro(cm) == ncol(cm)) # Error if the confusion matrix is not square fsr
+    score <- match.arg(score, c("macro", "micro"), several.ok = FALSE)
 
     # Base Metrics
     TP <- diag(cm)                   # True Positives (Diagonal)

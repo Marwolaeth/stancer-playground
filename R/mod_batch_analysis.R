@@ -263,7 +263,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         output$metrics_ui <- renderUI({
             req(metrics_data()) # Reactive
 
-            m <- metrics_data()
+            m <- evaluation_results()
 
             fluidRow(
                 infoBox(
@@ -293,22 +293,54 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        ### Display Confusion Matrix ----
+        output$confusion_matrix_ui <- renderUI({
+            res <- evaluation_results()
+
+            box(
+                title = i18n_r()$t("Confusion Matrix"),
+                width = NULL,
+                status = "info",
+                footer = i18n_r()$t(
+                    "Rows: True Labels | Columns: Predicted Labels"
+                ),
+                reactable::reactable(
+                    # Превращаем длинный формат в широкую таблицу для матрицы
+                    tidyr::pivot_wider(res$matrix, names_from = Pred, values_from = Freq),
+                    bordered = TRUE,
+                    compact = TRUE,
+                    defaultColDef = reactable::colDef(
+                        align = "center",
+                        headerStyle = list(background = "#f7f7f8"),
+                        # Добавляем цветовое окрашивание ячеек
+                        style = function(value) {
+                            if (!is.numeric(value)) return()
+                            scaled <- (value - min(res$matrix$Freq)) / (max(res$matrix$Freq) - min(res$matrix$Freq))
+                            color <- grDevices::rgb(colorRamp(c("#ffffff", "#78b2ff"))(scaled), maxColorValue = 255)
+                            list(background = color, fontWeight = "bold")
+                        }
+                    )
+                )
+            )
+        })
+
         ### Calculate Metrics ----
-        metrics_data <- eventReactive(input$run_score, {
+        evaluation_results <- eventReactive(input$run_score, {
             req(processed_data())
+            req(input$col_true, input$col_true != "")
             df <- processed_data()
 
+            cm <- cm(
+                df$stance, df[[input$col_true]],
+                scale = attr(df, "scale")
+            )
             acc <- metric_accuracy(
                 df$stance, df[[input$col_true]]
             ) |> round(3)
 
-            f1 <- metric_f1(
-                df$stance, df[[input$col_true]],
-                scale = attr(df, "scale")
-            ) |> round(3)
+            f1 <- metric_f1(cm) |> round(3)
 
-            # Mock
-            list(accuracy = acc, f1 = f1, n = nrow(df))
+            list(accuracy = acc, f1 = f1, cm = cm, n = nrow(df))
         })
 
     })
