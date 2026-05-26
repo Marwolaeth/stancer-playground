@@ -261,7 +261,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         ## Metrics ----
         ### Display Metrics ----
         output$metrics_ui <- renderUI({
-            req(metrics_data()) # Reactive
+            req(evaluation_results()) # Reactive
 
             m <- evaluation_results()
 
