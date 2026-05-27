@@ -52,7 +52,8 @@ mod_batch_analysis_ui <- function(id, i18n) {
                 ),
                 uiOutput(ns("download_ui")),
                 br(),
-                uiOutput(ns("metrics_ui"))
+                uiOutput(ns("metrics_ui")),
+                uiOutput(ns("confusion_matrix_ui"))
             )
         )
     )
@@ -305,17 +306,16 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     "Rows: True Labels | Columns: Predicted Labels"
                 ),
                 reactable::reactable(
-                    # Превращаем длинный формат в широкую таблицу для матрицы
-                    tidyr::pivot_wider(res$matrix, names_from = Pred, values_from = Freq),
+                    as.data.frame.matrix(t(res$cm)),
                     bordered = TRUE,
                     compact = TRUE,
                     defaultColDef = reactable::colDef(
                         align = "center",
                         headerStyle = list(background = "#f7f7f8"),
-                        # Добавляем цветовое окрашивание ячеек
+                        # Cell colouring
                         style = function(value) {
                             if (!is.numeric(value)) return()
-                            scaled <- (value - min(res$matrix$Freq)) / (max(res$matrix$Freq) - min(res$matrix$Freq))
+                            scaled <- (value - min(res$cm)) / (max(res$cm) - min(res$cm))
                             color <- grDevices::rgb(colorRamp(c("#ffffff", "#78b2ff"))(scaled), maxColorValue = 255)
                             list(background = color, fontWeight = "bold")
                         }
