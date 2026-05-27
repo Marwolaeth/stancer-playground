@@ -27,7 +27,7 @@ cm <- function(y_hat, y, scale = c("categorical", "likert")) {
 }
 
 metric_f1 <- function(cm, score = c("macro", "micro")) {
-    stopifnot(nro(cm) == ncol(cm)) # Error if the confusion matrix is not square fsr
+    stopifnot(nrow(cm) == ncol(cm)) # Error if the confusion matrix is not square fsr
     score <- match.arg(score, c("macro", "micro"), several.ok = FALSE)
 
     # Base Metrics
