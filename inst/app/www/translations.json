@@ -91,7 +91,19 @@
     },
     {
       "en": "Target of analysis",
-      "ru": "Объект тональности"
+      "ru": "Объект отношения"
+    },
+    {
+      "en": "Target Type",
+      "ru": "Тип анализа"
+    },
+    {
+      "en": "Object",
+      "ru": "Сущность"
+    },
+    {
+      "en": "Claim",
+      "ru": "Утверждение"
     },
     {
       "en": "Analysis Language",

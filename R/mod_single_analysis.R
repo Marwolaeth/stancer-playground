@@ -12,18 +12,31 @@ mod_single_analysis_ui <- function(id, i18n) {
                 # Dynamic text input
                 uiOutput(ns("text_input_ui")) |> with_helper("text"),
 
-                fluidRow(column(
-                    6, textInput(ns("target"), i18n$t("Target of analysis"), value = "R language")
-                ), column(
-                    6, selectInput(
-                        ns("lang"),
-                        i18n$t("Analysis Language"),
-                        choices = c(
-                            "English" = "en",
-                            "Russian" = "ru"
-                        )
+                fluidRow(
+                    column(
+                        4,
+                        textInput(
+                            ns("target"),
+                            i18n$t("Target of analysis"),
+                            value = "R language"
+                        ) |> with_helper("target")
+                    ),
+                    column(
+                        4,
+                        uiOutput(ns("type_ui")) |> with_helper("type")
+                    ),
+                    column(
+                        4,
+                        selectInput(
+                            ns("lang"),
+                            i18n$t("Analysis Language"),
+                            choices = c(
+                                "English" = "en",
+                                "Russian" = "ru"
+                            )
+                        )|> with_helper("language")
                     )
-                )),
+                ),
                 actionButton(
                     ns("run"),
                     i18n$t("Analyse"),
@@ -40,8 +53,8 @@ mod_single_analysis_ui <- function(id, i18n) {
                 width = NULL,
                 status = "warning",
                 # Dynamic select
-                uiOutput(ns("domain_ui")),
-                uiOutput(ns("scale_ui"))
+                uiOutput(ns("domain_ui")) |> with_helper("domain"),
+                uiOutput(ns("scale_ui")) |> with_helper("scale")
             ),
             valueBoxOutput(ns("stance_box"), width = NULL)
         )
@@ -54,9 +67,9 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         ns <- session$ns
 
         tdf <- golem::get_golem_options("translations_df")
-        # 1. Динамический textAreaInput (реагирует на i18n_r)
+        # 1. Dynamic textAreaInput
         output$text_input_ui <- renderUI({
-            # Сохраняем текущее значение, чтобы не стереть его при смене языка
+            # The current value
             current_val <- isolate(input$text) %||% ""
 
             textAreaInput(
@@ -70,13 +83,28 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 2. Динамический Domain (зависит от языка АНАЛИЗА input$lang)
+        # 2. Dynamic target type labels
+        output$type_ui <- renderUI({
+            current_type <- isolate(input$type)
+
+            types <- c("object", "claim")
+            type_labels <- sapply(types, function(x)
+                as.character(i18n_r()$t(tools::toTitleCase(x))))
+            names(types) <- type_labels
+
+            selectInput(
+                ns("type"),
+                i18n_r()$t("Target Type"),
+                choices = types,
+                selected = current_type
+            )
+        })
+
+        # 3. Dynamic Domain (depends on input$lang)
         output$domain_ui <- renderUI({
-            # Сохраняем выбор
+            # The current value
             current_domain <- isolate(input$domain)
 
-            # Определяем список ролей в зависимости от выбранного языка анализа
-            # Здесь можно добавить логику перевода самих терминов ролей
             roles <- c(
                 "General Expert",
                 "Sociologist",
@@ -86,10 +114,11 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                 "Political Scientist"
             )
 
-            # Переводим лейблы ролей через i18n_r
+            # Translate labels
             role_labels <- sapply(roles, function(x)
                 tdf[x, input$lang]
             )
+            roles <- role_labels
             names(roles) <- role_labels
 
             selectInput(
@@ -97,10 +126,11 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                 i18n_r()$t("Expert Domain"),
                 choices = roles,
                 selected = current_domain
+                # options = list(create = TRUE, addPrecedence = FALSE)
             )
         })
 
-        # 3. Динамическая шкала (реагирует на i18n_r)
+        # 4. Dynamic scale labels
         output$scale_ui <- renderUI({
             current_scale <- isolate(input$scale)
 
@@ -117,7 +147,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # Логика анализа
+        # The Analysis
         result <- eventReactive(input$run, {
             req(input$text, input$target)
             cfg <- settings_rx()
