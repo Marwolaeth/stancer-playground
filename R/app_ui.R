@@ -99,6 +99,11 @@ golem_add_external_resources <- function() {
             path = app_sys("app/www"),
             app_title = "stancer playground"
         ),
+        tags$link(
+            rel = 'stylesheet',
+            type = 'text/css',
+            href = 'tooltips.css'
+        ),
 
         # CRITICAL: Active browser-side script activation
         shinyjs::useShinyjs(),

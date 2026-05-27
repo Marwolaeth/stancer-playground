@@ -251,6 +251,46 @@
       "en": "Download Results (CSV)",
       "ru": "Сохранить результат (CSV)"
     },
+    {
+      "en": "Next →",
+      "ru": "Следующая →"
+    },
+    {
+      "en": "← Previous",
+      "ru": "← Предыдущая"
+    },
+    {
+      "en": "Page {page} of {pages}",
+      "ru": "Страница {page} из {pages}"
+    },
+    {
+      "en": "{rowStart}–{rowEnd} of {rows}",
+      "ru": "{rowStart}–{rowEnd} из {rows} записей"
+    },
+    {
+      "en": "Show {rows} rows",
+      "ru": "Показывать {rows}"
+    },
+    {
+      "en": "Next page",
+      "ru": "Следующая страница"
+    },
+    {
+      "en": "Previous page",
+      "ru": "Предыдущая страница"
+    },
+    {
+      "en": "Page {page}",
+      "ru": "Страница {page}"
+    },
+    {
+      "en": "Go to page",
+      "ru": "Перейти к странице"
+    },
+    {
+      "en": "Rows per page",
+      "ru": "Записей на странице"
+    },
     // Interface Settings ----
     {
       "en": "Interface Settings",

@@ -1,0 +1,32 @@
+.tooltiptext {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: justify;
+  padding: 5px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  width: 300px; /Adjust width as needed */
+  bottom: 125%; /Position tooltip below the cell */
+  left: 25%;
+  margin-left: -300px; /Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+span:hover + .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}

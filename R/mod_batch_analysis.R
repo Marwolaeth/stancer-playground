@@ -215,7 +215,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
 
             # stancer::llm_stance(df, ...)
             df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
-            df$explanation <- "Batch analysis explanation placeholder..."
+            df$explanation <- "Batch analysis explanation placeholder... This is a rather long explanation: the model tried to weigh all arguments."
             # To be used with metric_f1()
             attr(df, "scale") <- input$scale
             df
@@ -226,17 +226,21 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         output$data_table <- reactable::renderReactable({
             display_df <- if (!is.null(processed_data())) processed_data() else raw_data()
             req(display_df)
-
             reactable::reactable(
                 display_df,
                 pagination = TRUE,
                 highlight = TRUE,
                 searchable = TRUE,
                 paginationType = "simple",
-                language = reactable::reactableLang(
-                    searchPlaceholder = i18n_r()$t("Search..."),
-                    noData = i18n_r()$t("No data found")
-                )
+                ### Columns ----
+                defaultColDef = reactable::colDef(
+                    searchable = FALSE, show = FALSE
+                ),
+                columns = stancer_columns(
+                    input$col_text, input$col_true, input$col_target
+                ),
+                ### Labels ----
+                language = reactable_lang(i18n_r)
             )
         })
 
