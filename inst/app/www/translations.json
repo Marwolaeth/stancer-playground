@@ -230,6 +230,14 @@
       "en": "Samples",
       "ru": "Выборка"
     },
+    {
+      "en": "Confusion Matrix",
+      "ru": "Матрица ошибок"
+    },
+    {
+      "en": "Rows: True Labels | Columns: Predicted Labels",
+      "ru": "Строки: Истинные метки | Столбцы: Предсказанные метки"
+    },
     // Reactable Labels ----
     {
       "en": "Search...",
