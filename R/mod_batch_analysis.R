@@ -309,15 +309,49 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     as.data.frame.matrix(t(res$cm)),
                     bordered = TRUE,
                     compact = TRUE,
+                    filterable = FALSE,
+                    searchable = FALSE,
+                    sortable = FALSE,
+                    resizable = FALSE,
                     defaultColDef = reactable::colDef(
                         align = "center",
                         headerStyle = list(background = "#f7f7f8"),
                         # Cell colouring
-                        style = function(value) {
-                            if (!is.numeric(value)) return()
-                            scaled <- (value - min(res$cm)) / (max(res$cm) - min(res$cm))
-                            color <- grDevices::rgb(colorRamp(c("#ffffff", "#78b2ff"))(scaled), maxColorValue = 255)
-                            list(background = color, fontWeight = "bold")
+                        style = function(value, index, name) {
+                            if (!is.numeric(value) || is.na(value)) return()
+                            true <- as.data.frame(
+                                t(res$cm))$Actual[index]
+                            is_diagonal <- (true == name)
+
+                            scaled <- (value - min(res$cm)) /
+                                (max(res$cm) - min(res$cm))
+                            if (is_diagonal) {
+                                # Green colours for true predictions
+                                colour <- grDevices::rgb(
+                                    colorRamp(
+                                        c("#ffffff", "#d4edda", "#28a745")
+                                    )(scaled),
+                                    maxColorValue = 255)
+                            } else {
+                                # Red colours for mistakes
+                                # If zero mistakes, white
+                                if (value == 0) {
+                                    colour <- "#ffffff"
+                                } else {
+                                    colour <- grDevices::rgb(
+                                        colorRamp(
+                                            c("#ffffff", "#f8d7da", "#dc3545")
+                                        )(scaled),
+                                        maxColorValue = 255
+                                    )
+                                }
+                            }
+
+                            list(
+                                background = colour,
+                                fontWeight = "bold",
+                                color = if(scaled > 0.5) "white" else "black"
+                            )
                         }
                     )
                 )
