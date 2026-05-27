@@ -10,7 +10,7 @@ mod_single_analysis_ui <- function(id, i18n) {
                 status = "danger",
                 solidHeader = TRUE,
                 # Dynamic text input
-                uiOutput(ns("text_input_ui")),
+                uiOutput(ns("text_input_ui")) |> with_helper("text"),
 
                 fluidRow(column(
                     6, textInput(ns("target"), i18n$t("Target of analysis"), value = "R language")

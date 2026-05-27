@@ -9,6 +9,21 @@ app_server <- function(input, output, session) {
     i18n$set_translation_language("en")
     i18n$use_js()
 
+    # current_help_dir <- reactive({
+    #     # Берем базовый путь из опций голема или system.file
+    #     base_path <- golem::get_golem_options(which = "help_path")
+    #     # Добавляем текущий язык
+    #     file.path(base_path, ui_language())
+    # })
+
+    shinyhelper::observe_helpers(
+        session = session,
+        help_dir = file.path(
+            golem::get_golem_options(which = "help_path"),
+            ui_language()
+        )
+    )
+
     # keep track of language object as a reactive
     i18n_r <- reactive({
         i18n

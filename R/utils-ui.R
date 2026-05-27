@@ -1,12 +1,23 @@
-i18n. <- function(translator, key) {
-    stopifnot(R6::is.R6(translator) && "Translator" %in% class(translator))
-    t <- translator$clone(deep = FALSE)
-    translation <- t$t(key)
-    if (is.list(translation)) translation <- translation$children[[1]]
-    translation
+strip_html <- function(s) {
+    gsub('<.*?>', '', s)
 }
 
-# t. <- function(key, language, translations) {
-#     value <- translations[key, language]
-#     ifelse(is.na(value), key, value)
-# }
+ht <- function(tag) {
+    tag |> as.character() |> strip_html()
+}
+
+#' Helper wrapper
+#' @param ui_element Shiny UI tag
+#' @param help_id Helpfile base name  (e.g., "batch_analysis")
+with_helper <- function(ui_element, help_id) {
+    shinyhelper::helper(
+        ui_element,
+        icon = "question-circle",
+        colour = '#d73925',
+        type = 'markdown',
+        content = help_id,
+        buttonLabel = "Ok",
+        easyClose = TRUE,
+        fade = TRUE
+    )
+}

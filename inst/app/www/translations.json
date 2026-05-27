@@ -311,6 +311,11 @@
     {
       "en": "Language changed to",
       "ru": "Язык изменен на:"
+    },
+    // Helper ----
+    {
+      "en": "Close",
+      "ru": "Понятно"
     }
   ]
 }

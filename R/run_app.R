@@ -35,7 +35,8 @@ run_app <- function(
 		    translator = shiny.i18n::Translator$new(
 		        translation_json_path = "inst/app/www/translations.json"
 		    ),
-		    translations_df = translations
+		    translations_df = translations,
+		    help_path = "inst/app/www/help"
 		)
 	)
 }
