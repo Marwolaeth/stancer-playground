@@ -114,14 +114,10 @@ mod_model_config_server <- function(id, i18n) {
                 else
                     env_key
             )
-            chat <- prepare_chat(config)
+            chat <- prepare_chat(config, ellmer::params(max_tokens = 2))
 
             tryCatch({
-                res <- chat$chat(
-                    "Respond with '1'",
-                    echo = "none",
-                    max_tokens = 2
-                )
+                res <- chat$chat("Respond with '1'", echo = "none")
                 # If character, the result is valid
                 is.character(res) && nchar(res) > 0
             }, error = function(e) {
@@ -154,7 +150,7 @@ mod_model_config_server <- function(id, i18n) {
                 key = if (nchar(input$api_key) > 0)
                     input$api_key
                 else
-                    NULL
+                    Sys.getenv(paste0(toupper(input$provider), "_API_KEY"))
             )
         })
     })

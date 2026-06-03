@@ -56,7 +56,8 @@ mod_single_analysis_ui <- function(id, i18n) {
                 uiOutput(ns("domain_ui")) |> with_helper("domain"),
                 uiOutput(ns("scale_ui")) |> with_helper("scale")
             ),
-            valueBoxOutput(ns("stance_box"), width = NULL)
+            valueBoxOutput(ns("stance_box"), width = NULL) |>
+                with_red_spinner()
         )
     ))
 }
@@ -67,7 +68,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         ns <- session$ns
 
         tdf <- golem::get_golem_options("translations_df")
-        # 1. Dynamic textAreaInput
+        # 1. Dynamic textAreaInput ----
         output$text_input_ui <- renderUI({
             # The current value
             current_val <- isolate(input$text) %||% ""
@@ -83,7 +84,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 2. Dynamic target type labels
+        # 2. Dynamic target type labels ----
         output$type_ui <- renderUI({
             current_type <- isolate(input$type)
 
@@ -100,7 +101,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 3. Dynamic Domain (depends on input$lang)
+        # 3. Dynamic Domain (depends on input$lang) ----
         output$domain_ui <- renderUI({
             # The current value
             current_domain <- isolate(input$domain)
@@ -130,7 +131,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # 4. Dynamic scale labels
+        # 4. Dynamic scale labels ----
         output$scale_ui <- renderUI({
             current_scale <- isolate(input$scale)
 
@@ -147,19 +148,33 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
-        # The Analysis
+        # The Analysis ----
         result <- eventReactive(input$run, {
             req(input$text, input$target)
             cfg <- settings_rx()
+            params <- ellmer::params(temperature = 0)
 
-            # Имитация вызова stancer
-            list(stance = "Agree", explanation = "The text expresses strong positive sentiment towards R's tidyverse ecosystem.")
+            # Call stancer
+            chat <- prepare_chat(cfg, params)
+
+            stancer::llm_stance(
+                input$text,
+                target = input$target,
+                chat_base = chat,
+                type = input$type,
+                language = input$lang,
+                scale = input$scale,
+                domain_role = input$domain
+            )
         })
 
+        # Output ----
         output$stance_box <- renderValueBox({
             res <- result()
+            stance <- res$summary$stance
+
             valueBox(
-                res$stance,
+                stance,
                 i18n_r()$t("Detected Stance"),
                 icon = icon("balance-scale"),
                 color = "green"
@@ -172,7 +187,10 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                 title = i18n_r()$t("Reasoning & Explanation"),
                 width = NULL,
                 status = "info",
-                p(res$explanation, style = "font-style: italic; font-size: 1.1em; color: #2c3e50;")
+                p(
+                    res$summary$explanation,
+                    style = "font-style: italic; font-size: 1.1em; color: #2c3e50;"
+                )
             )
         })
     })
