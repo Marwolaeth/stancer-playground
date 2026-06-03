@@ -15,12 +15,24 @@ mod_model_config_ui <- function(id, i18n) {
                     "Mistral" = "mistral",
                     "OpenAI-compatible" = "openai-compatible"
                 )
+            ) |> with_helper("model-provider"),
+            textInput(
+                ns("model_name"),
+                i18n$t("Model Name"),
+                value = "google/gemini-2.0-flash-001"
+            ) |> with_helper("model-name"),
+
+            passwordInput(
+                ns("api_key"),
+                i18n$t("API Key"),
+                placeholder = "sk-..."
+            ) |> with_helper("model-key"),
+
+            checkboxInput(
+                ns("save_cookie"),
+                i18n$t("Save key in cookies"),
+                value = FALSE
             ),
-            textInput(ns("model_name"), i18n$t("Model Name"), value = "google/gemini-2.0-flash-001"),
-
-            passwordInput(ns("api_key"), i18n$t("API Key"), placeholder = "sk-..."),
-
-            checkboxInput(ns("save_cookie"), i18n$t("Save key in cookies"), value = FALSE),
 
             uiOutput(ns("key_status")),
 
