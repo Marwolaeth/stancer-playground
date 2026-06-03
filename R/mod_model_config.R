@@ -101,7 +101,7 @@ mod_model_config_server <- function(id, i18n) {
         conn_status_flag <- eventReactive(input$test_conn, {
             req(input$model_name)
 
-            params <- ellmer::params(mak_tokens = 4)
+            params <- ellmer::params(max_tokens = 4)
 
             # Get API Key
             env_var_name <- paste0(toupper(input$provider), "_API_KEY")
