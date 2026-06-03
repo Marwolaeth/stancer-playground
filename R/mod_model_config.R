@@ -101,8 +101,6 @@ mod_model_config_server <- function(id, i18n) {
         conn_status_flag <- eventReactive(input$test_conn, {
             req(input$model_name)
 
-            params <- ellmer::params(max_tokens = 4)
-
             # Get API Key
             env_var_name <- paste0(toupper(input$provider), "_API_KEY")
             env_key <- Sys.getenv(env_var_name)
@@ -116,17 +114,20 @@ mod_model_config_server <- function(id, i18n) {
                 else
                     env_key
             )
-            chat <- prepare_chat(config, params)
+            chat <- prepare_chat(config)
 
-            flag <- tryCatch(
-                {
-                chat$chat("Hi", echo = "none")
-                ellmer:::is_assistant_turn(chat$last_turn(role = "assistant"))
-            },
-            error = function(e) FALSE
-            )
-
-            return(flag)
+            tryCatch({
+                res <- chat$chat(
+                    "Respond with '1'",
+                    echo = "none",
+                    max_tokens = 2
+                )
+                # If character, the result is valid
+                is.character(res) && nchar(res) > 0
+            }, error = function(e) {
+                message("Connection test failed: ", e$message)
+                FALSE
+            })
         })
 
         output$conn_status <- renderUI({
