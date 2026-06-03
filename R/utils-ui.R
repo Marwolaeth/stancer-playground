@@ -39,3 +39,20 @@ with_red_spinner <- function(
         caption = caption
     )
 }
+
+stance_colour <- function(stance_label) {
+    switch(
+        stance_label,
+        # Categorical (three-way)
+        "Positive" = "#28a745",
+        "Negative" = "#dc3545",
+        "Neutral" = "#ffc107",
+        # Likert Scale
+        "Strongly Disagree" = "#bd2130",
+        "Disagree" = "#dc3545",
+        "Agree" = "#28a745",
+        "Strongly Agree" = "#1e7e34",
+        # Default
+        "#6c757d"
+    )
+}

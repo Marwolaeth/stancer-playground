@@ -33,20 +33,7 @@ stance_badge <- function(value) {
     if (is.na(value)) return(value)
 
     # Colour pallette for both scales
-    colour <- switch(
-        value,
-        # Categorical (three-way)
-        "Positive" = "#28a745",
-        "Negative" = "#dc3545",
-        "Neutral" = "#ffc107",
-        # Likert Scale
-        "Strongly Disagree" = "#bd2130",
-        "Disagree" = "#dc3545",
-        "Agree" = "#28a745",
-        "Strongly Agree" = "#1e7e34",
-        # Default
-        "#6c757d"
-    )
+    colour <- stance_colour(value)
     htmltools::span(
         style = paste0(
             "background-color: ", colour, "; ",

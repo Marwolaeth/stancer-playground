@@ -177,7 +177,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                 stance,
                 i18n_r()$t("Detected Stance"),
                 icon = icon("balance-scale"),
-                color = "green"
+                color = stance_colour(stance)
             )
         })
 

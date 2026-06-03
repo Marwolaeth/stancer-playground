@@ -30,7 +30,8 @@ prepare_chat <- function(config, params = NULL) {
 # }
 #
 # chat <- chat_openrouter(
-#     model = 'nvidia/nemotron-3-super-120b-a12b:free', # Nice
+# #   model = 'nvidia/nemotron-3-super-120b-a12b:free', # Nice
+#     model = 'openrouter/owl-alpha',
 #     credentials = openrouter_key,
 #     api_args = list(temperature = 0)
 # )
