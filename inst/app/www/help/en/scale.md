@@ -1,4 +1,4 @@
-# Scale
+### Scale
 
 Stance Scale:
 1.  **Categorical**: Simple classification (Negative, Neutral, Positive). Most stable.

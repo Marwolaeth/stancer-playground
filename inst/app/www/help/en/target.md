@@ -1,4 +1,4 @@
-# Target of Stance
+### Target of Stance
 
 The entity or claim the stance is directed at.
 

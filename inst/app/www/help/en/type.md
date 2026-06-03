@@ -1,4 +1,4 @@
-# Analysis Type
+### Analysis Type
 
 Type of the stance target:
 

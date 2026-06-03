@@ -10,7 +10,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
                 box(
                     title = i18n$t("Data Import"),
                     width = NULL, status = "danger", solidHeader = TRUE,
-                    uiOutput(ns("file_import_ui")),
+                    uiOutput(ns("file_import_ui")) |> with_helper("import"),
                     actionButton(
                         ns("load_example"),
                         i18n$t("Use Example"),
@@ -30,14 +30,16 @@ mod_batch_analysis_ui <- function(id, i18n) {
                         ns("lang"),
                         i18n$t("Analysis Language"),
                         choices = c("English" = "en", "Russian" = "ru")
-                    ),
+                    ) |>
+                        with_helper("language"),
                     uiOutput(ns("domain_ui")),
                     uiOutput(ns("scale_ui")),
                     numericInput(
                         ns("n_rows"),
                         i18n$t("Number of rows to analyse"),
                         value = 6, min = 1, max = 20
-                    )
+                    ) |>
+                        with_helper("limits")
                 ),
                 ## Actions ----
                 uiOutput(ns("batch_actions_ui"))
@@ -46,7 +48,12 @@ mod_batch_analysis_ui <- function(id, i18n) {
             column(
                 width = 8,
                 box(
-                    title = i18n$t("Data and Results"),
+                    title = fluidRow(
+                        column(
+                            12,
+                            i18n$t("Data and Results"),
+                        ) |> with_helper("results", style = "float:right;")
+                    ),
                     width = NULL, status = "info",
                     reactable::reactableOutput(ns("data_table"))
                 ),
@@ -105,6 +112,11 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             req(raw_data())
             cols <- colnames(raw_data())
 
+            types <- c("object", "claim")
+            type_labels <- sapply(types, function(x)
+                as.character(i18n_r()$t(tools::toTitleCase(x))))
+            names(types) <- type_labels
+
             tagList(
                 h4(i18n_r()$t("Column Mapping")),
                 selectInput(
@@ -121,6 +133,16 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     ns("manual_target"),
                     i18n_r()$t("Or Enter Manual Target"),
                     value = ""
+                ),
+                selectInput(
+                    ns("col_type"),
+                    i18n_r()$t("Target Type Column (Optional)"),
+                    choices = c("-" = "", cols)
+                ),
+                selectInput(
+                    ns("type"),
+                    i18n_r()$t("Or Select Target Type Manually"),
+                    choices = types
                 ),
                 selectInput(
                     ns("col_true"),
@@ -161,7 +183,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 i18n_r()$t("Expert Domain"),
                 choices = roles,
                 selected = current_domain
-            )
+            ) |>
+                with_helper("domain")
         })
 
         ### Scales ----
@@ -178,7 +201,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 i18n_r()$t("Sentiment Scale"),
                 choices = scales,
                 selected = current_scale
-            )
+            ) |>
+                with_helper("scale")
         })
 
         # Actions ----
@@ -303,7 +327,12 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             res <- evaluation_results()
 
             box(
-                title = i18n_r()$t("Confusion Matrix"),
+                title = fluidRow(
+                    column(
+                        12,
+                        i18n_r()$t("Confusion Matrix"),
+                    ) |> with_helper("metrics", style = "float:right;")
+                ),
                 width = NULL,
                 status = "info",
                 footer = i18n_r()$t(

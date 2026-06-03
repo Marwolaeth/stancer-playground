@@ -219,6 +219,14 @@
       "ru": "Или введите объект вручную"
     },
     {
+      "en": "Target Type Column (Optional)",
+      "ru": "Тип анализа (Необязательно)"
+    },
+    {
+      "en": "Or Select Target Type Manually",
+      "ru": "Или выберите тип вручную"
+    },
+    {
       "en": "True Labels Column (Optional)",
       "ru": "Истинные метки (Необязательно)"
     },

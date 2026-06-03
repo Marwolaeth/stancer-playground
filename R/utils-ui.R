@@ -9,7 +9,8 @@ ht <- function(tag) {
 #' Helper wrapper
 #' @param ui_element Shiny UI tag
 #' @param help_id Helpfile base name  (e.g., "batch_analysis")
-with_helper <- function(ui_element, help_id) {
+#' @param ... Other arguments to pass to `shinyhelper::helper()` or the `div` containing the icon.
+with_helper <- function(ui_element, help_id, ...) {
     shinyhelper::helper(
         ui_element,
         icon = "question-circle",
@@ -18,6 +19,7 @@ with_helper <- function(ui_element, help_id) {
         content = help_id,
         buttonLabel = "Ok",
         easyClose = TRUE,
-        fade = TRUE
+        fade = TRUE,
+        ...
     )
 }

@@ -1,4 +1,4 @@
-# Domain Role
+### Domain Role
 
 A specific perspective the model adopts during the first stage.
 

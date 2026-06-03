@@ -4,12 +4,14 @@
 \alias{with_helper}
 \title{Helper wrapper}
 \usage{
-with_helper(ui_element, help_id)
+with_helper(ui_element, help_id, ...)
 }
 \arguments{
 \item{ui_element}{Shiny UI tag}
 
 \item{help_id}{Helpfile base name  (e.g., "batch_analysis")}
+
+\item{...}{Other arguments to pass to `shinyhelper::helper()` or the `div` containing the icon.}
 }
 \description{
 Helper wrapper
