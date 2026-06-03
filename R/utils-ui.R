@@ -23,3 +23,19 @@ with_helper <- function(ui_element, help_id, ...) {
         ...
     )
 }
+
+with_red_spinner <- function(
+        ui_element,
+        size = 1.8,
+        caption = 'Pending Evaluation'
+) {
+    shinycssloaders::withSpinner(
+        ui_element,
+        type = 2,
+        color = '#d73925',
+        color.background = '#610E01',
+        hide.ui = FALSE,
+        size = size,
+        caption = caption
+    )
+}

@@ -76,6 +76,14 @@
       "en": "No Key Detected",
       "ru": "API-ключ не установлен"
     },
+    {
+      "en": "Testing Connection...",
+      "ru": "Проверка соединения…"
+    },
+    {
+      "en": "Error",
+      "ru": "Ошибка соединения"
+    },
     // Single Analysis ----
     {
       "en": "Input Text",

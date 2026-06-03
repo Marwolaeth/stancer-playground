@@ -16,3 +16,23 @@ prepare_chat <- function(config, params = NULL) {
         params = params
     )
 }
+
+# # pak::pak("tidyverse/ellmer")
+# # pak::pak("Marwolaeth/stancer")
+#
+# library(stancer)
+# library(ellmer)
+#
+# openrouter_key <- function() {
+#     list(Authorization = paste(
+#         'Bearer', Sys.getenv('OPENROUTER_API_KEY')
+#     ))
+# }
+#
+# chat <- chat_openrouter(
+#     model = 'nvidia/nemotron-3-super-120b-a12b:free', # Nice
+#     credentials = openrouter_key,
+#     api_args = list(temperature = 0)
+# )
+#
+# chat$chat("Hi")

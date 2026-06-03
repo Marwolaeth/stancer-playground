@@ -9,8 +9,6 @@ app_server <- function(input, output, session) {
     i18n$set_translation_language("en")
     i18n$use_js()
 
-    options(ellmer_timeout_s = 120000000)
-
     # current_help_dir <- reactive({
     #     # Берем базовый путь из опций голема или system.file
     #     base_path <- golem::get_golem_options(which = "help_path")

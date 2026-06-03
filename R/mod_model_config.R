@@ -42,6 +42,13 @@ mod_model_config_ui <- function(id, i18n) {
                 i18n$t("Test Connection"),
                 class = "btn-info",
                 width = "100%"
+            ),
+            br(),
+            br(),
+            br(),
+            uiOutput(ns("conn_status")) |> with_red_spinner(
+                caption = i18n$t("Testing Connection..."),
+                size = 0.4
             )
         )
     )
@@ -52,13 +59,13 @@ mod_model_config_server <- function(id, i18n) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
 
-        # 1. Загрузка ключа из Cookies при старте
+        # 1. Load API Key from Cookies on start ----
         observeEvent(get_cookie("stancer_api_key"), {
             updatePasswordInput(session, "api_key", value = get_cookie("stancer_api_key"))
             updateCheckboxInput(session, "save_cookie", value = TRUE)
         }, once = TRUE)
 
-        # 2. Сохранение в Cookies при изменении (если чекбокс активен)
+        # 2. Save to Cookies (if enabled) ----
         observe({
             if (input$save_cookie && nchar(input$api_key) > 0) {
                 set_cookie("stancer_api_key", input$api_key)
@@ -67,7 +74,7 @@ mod_model_config_server <- function(id, i18n) {
             }
         })
 
-        # 3. Статус ключа (Приоритет: Sys.env > Input)
+        # 3. API Key Status (Priority: Sys.env > Input) ----
         output$key_status <- renderUI({
             env_var_name <- paste0(toupper(input$provider), "_API_KEY")
             has_env <- nchar(Sys.getenv(env_var_name)) > 0
@@ -76,21 +83,69 @@ mod_model_config_server <- function(id, i18n) {
                 span(icon("check-circle"),
                      i18n()$t("Using System Environment Key"),
                      style = "color: green; font-size: 0.8em;"
-                    )
+                )
             } else if (nchar(input$api_key) > 0) {
                 span(icon("key"),
                      i18n$t("Using Manual Key"),
                      style = "color: orange; font-size: 0.8em;"
-                    )
+                )
             } else {
                 span(icon("exclamation-triangle"),
-                     "No Key Detected",
+                     i18n()$t("No Key Detected"),
                      style = "color: red; font-size: 0.8em;"
-                    )
+                )
             }
         })
 
-        # Возвращаем реактивный объект с настройками чата
+        # 4. Test Connection ----
+        conn_status_flag <- eventReactive(input$test_conn, {
+            req(input$model_name)
+
+            params <- ellmer::params(mak_tokens = 4)
+
+            # Get API Key
+            env_var_name <- paste0(toupper(input$provider), "_API_KEY")
+            env_key <- Sys.getenv(env_var_name)
+
+            # Test the current config before returning
+            config <- list(
+                provider = input$provider,
+                model = input$model_name,
+                key = if (nchar(input$api_key) > 0)
+                    input$api_key
+                else
+                    env_key
+            )
+            chat <- prepare_chat(config, params)
+
+            flag <- tryCatch(
+                {
+                chat$chat("Hi", echo = "none")
+                ellmer:::is_assistant_turn(chat$last_turn(role = "assistant"))
+            },
+            error = function(e) FALSE
+            )
+
+            return(flag)
+        })
+
+        output$conn_status <- renderUI({
+            req(is.logical(conn_status_flag()))
+
+            if (conn_status_flag()) {
+                span(icon("check-circle"),
+                     "Ok",
+                     style = "color: green; font-size: 1.2em;"
+                )
+            } else {
+                span(icon("exclamation-triangle"),
+                     i18n()$t("Error"),
+                     style = "color: red; font-size: 1.2em;"
+                )
+            }
+        })
+
+        # Return Reactive with configuration
         reactive({
             list(
                 provider = input$provider,
