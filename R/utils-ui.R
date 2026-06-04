@@ -40,9 +40,9 @@ with_red_spinner <- function(
     )
 }
 
-stance_colour <- function(stance_label) {
+stance_colour_reactable <- function(stance_label) {
     switch(
-        stance_label,
+        as.character(stance_label),
         # Categorical (three-way)
         "Positive" = "#28a745",
         "Negative" = "#dc3545",
@@ -54,5 +54,39 @@ stance_colour <- function(stance_label) {
         "Strongly Agree" = "#1e7e34",
         # Default
         "#6c757d"
+    )
+}
+
+stance_colour_dashboard <- function(stance_label) {
+    switch(
+        as.character(stance_label),
+        # Categorical (three-way)
+        "Positive" = "green",
+        "Negative" = "red",
+        "Neutral" = "yellow",
+        # Likert Scale
+        "Strongly Disagree" = "maroon",
+        "Disagree" = "red",
+        "Agree" = "green",
+        "Strongly Agree" = "olive",
+        # Default
+        "navy"
+    )
+}
+
+stance_status <- function(stance_label) {
+    switch(
+        as.character(stance_label),
+        # Categorical (three-way)
+        "Positive" = "success",
+        "Negative" = "danger",
+        "Neutral" = "warning",
+        # Likert Scale
+        "Strongly Disagree" = "danger",
+        "Disagree" = "danger",
+        "Agree" = "success",
+        "Strongly Agree" = "success",
+        # Default
+        "navy"
     )
 }

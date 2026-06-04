@@ -157,15 +157,24 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             # Call stancer
             chat <- prepare_chat(cfg, params)
 
-            stancer::llm_stance(
-                input$text,
-                target = input$target,
-                chat_base = chat,
-                type = input$type,
-                language = input$lang,
-                scale = input$scale,
-                domain_role = input$domain
+            # stancer::llm_stance(
+            #     input$text,
+            #     target = input$target,
+            #     chat_base = chat,
+            #     type = input$type,
+            #     language = input$lang,
+            #     scale = input$scale,
+            #     domain_role = input$domain
+            # )
+            stance <- sample(
+                c(
+                    "Positive", "Neutral", "Negative",
+                    "Strongly Agree", "Agree", "Disagree", "Strongly Disagree",
+                    "NA"
+                ),
+                size = 1
             )
+            list(summary = data.frame(stance = stance, explanation = "Y"))
         })
 
         # Output ----
@@ -177,7 +186,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                 stance,
                 i18n_r()$t("Detected Stance"),
                 icon = icon("balance-scale"),
-                color = stance_colour(stance)
+                color = stance_colour_dashboard(stance)
             )
         })
 
@@ -186,7 +195,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             box(
                 title = i18n_r()$t("Reasoning & Explanation"),
                 width = NULL,
-                status = "info",
+                status = stance_status(res$summary$stance),
                 p(
                     res$summary$explanation,
                     style = "font-style: italic; font-size: 1.1em; color: #2c3e50;"

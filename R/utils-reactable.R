@@ -33,7 +33,7 @@ stance_badge <- function(value) {
     if (is.na(value)) return(value)
 
     # Colour pallette for both scales
-    colour <- stance_colour(value)
+    colour <- stance_colour_reactable(value)
     htmltools::span(
         style = paste0(
             "background-color: ", colour, "; ",
