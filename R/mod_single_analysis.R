@@ -57,7 +57,10 @@ mod_single_analysis_ui <- function(id, i18n) {
                 uiOutput(ns("scale_ui")) |> with_helper("scale")
             ),
             valueBoxOutput(ns("stance_box"), width = NULL) |>
-                with_red_spinner()
+                with_red_spinner(
+                    caption = i18n$t("Analysis in progress..."),
+                    size = 1.1
+                )
         )
     ))
 }

@@ -43,6 +43,10 @@
       "en": "Prompt Editor",
       "ru": "Инструкции модели"
     },
+    {
+      "en": "Analysis in progress...",
+      "ru": "Анализ…"
+    },
     // Stance Labels
     {
       "en": "Negative",
