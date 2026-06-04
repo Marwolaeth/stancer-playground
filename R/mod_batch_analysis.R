@@ -140,7 +140,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     choices = c("-" = "", cols)
                 ),
                 selectInput(
-                    ns("type"),
+                    ns("manual_type"),
                     i18n_r()$t("Or Select Target Type Manually"),
                     choices = types
                 ),
@@ -236,6 +236,19 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         processed_data <- eventReactive(input$run_batch, {
             req(raw_data())
             df <- head(raw_data(), input$n_rows)
+
+            ## 1. Argument Mapping ----
+            targets <- if (input$col_target != "") {
+                df[[input$col_target]]
+            } else {
+                input$manual_target
+            }
+
+            types <- if (input$col_type != "") {
+                df[[input$col_type]]
+            } else {
+                input$manual_type
+            }
 
             # stancer::llm_stance(df, ...)
             df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
