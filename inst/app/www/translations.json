@@ -44,10 +44,22 @@
       "ru": "Инструкции модели"
     },
     {
+      "en": "API Key is missing!",
+      "ru": "API-ключ не найден!"
+    },
+    {
       "en": "Analysis in progress...",
       "ru": "Анализ…"
     },
-    // Stance Labels
+    {
+      "en": "Error during analysis:",
+      "ru": "Ошибка во время анализа:"
+    },
+    {
+      "en": "Error during analysis",
+      "ru": "Во время анализа произошла ошибка"
+    },
+    // Stance Labels ----
     {
       "en": "Negative",
       "ru": "Отрицательное"

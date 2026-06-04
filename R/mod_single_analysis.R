@@ -155,20 +155,42 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         result <- eventReactive(input$run, {
             req(input$text, input$target)
             cfg <- settings_rx()
+
+            # Temporary disable to prevent repeated clicks
+            shinyjs::disable("run")
+            on.exit(shinyjs::enable("run"))
+
+            # Check API Key
+            if (is.null(cfg$key)) {
+                showNotification(
+                    i18n_r()$t("API Key is missing!"),
+                    type = "error"
+                )
+                return(empty_result(i18n_r()$t("API Key is missing!")))
+            }
+
             params <- ellmer::params(temperature = 0)
 
             # Call stancer
             chat <- prepare_chat(cfg, params)
 
-            stancer::llm_stance(
-                input$text,
-                target = input$target,
-                chat_base = chat,
-                type = input$type,
-                language = input$lang,
-                scale = input$scale,
-                domain_role = input$domain
-            )
+            tryCatch({
+                stancer::llm_stance(
+                    input$text,
+                    target = input$target,
+                    chat_base = chat,
+                    type = input$type,
+                    language = input$lang,
+                    scale = input$scale,
+                    domain_role = input$domain
+                )
+            }, error = function(e) {
+                showNotification(
+                    paste(i18n_r()$t("Error during analysis:"), e$message),
+                    type = "error"
+                )
+                return(empty_result(i18n_r()$t("Error during analysis")))
+            })
             # stance <- sample(
             #     c(
             #         "Positive", "Neutral", "Negative",
@@ -183,6 +205,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         # Output ----
         output$stance_box <- renderValueBox({
             res <- result()
+            req(res)
             stance <- res$summary$stance
 
             valueBox(
@@ -195,6 +218,8 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
 
         output$explanation_ui <- renderUI({
             res <- result()
+            req(res)
+
             box(
                 title = i18n_r()$t("Reasoning & Explanation"),
                 width = NULL,
