@@ -157,24 +157,24 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             # Call stancer
             chat <- prepare_chat(cfg, params)
 
-            # stancer::llm_stance(
-            #     input$text,
-            #     target = input$target,
-            #     chat_base = chat,
-            #     type = input$type,
-            #     language = input$lang,
-            #     scale = input$scale,
-            #     domain_role = input$domain
-            # )
-            stance <- sample(
-                c(
-                    "Positive", "Neutral", "Negative",
-                    "Strongly Agree", "Agree", "Disagree", "Strongly Disagree",
-                    "NA"
-                ),
-                size = 1
+            stancer::llm_stance(
+                input$text,
+                target = input$target,
+                chat_base = chat,
+                type = input$type,
+                language = input$lang,
+                scale = input$scale,
+                domain_role = input$domain
             )
-            list(summary = data.frame(stance = stance, explanation = "Y"))
+            # stance <- sample(
+            #     c(
+            #         "Positive", "Neutral", "Negative",
+            #         "Strongly Agree", "Agree", "Disagree", "Strongly Disagree",
+            #         "NA"
+            #     ),
+            #     size = 1
+            # )
+            # list(summary = data.frame(stance = stance, explanation = "Y"))
         })
 
         # Output ----
@@ -183,7 +183,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             stance <- res$summary$stance
 
             valueBox(
-                stance,
+                i18n_r()$t(stance),
                 i18n_r()$t("Detected Stance"),
                 icon = icon("balance-scale"),
                 color = stance_colour_dashboard(stance)

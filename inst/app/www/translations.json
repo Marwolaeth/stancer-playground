@@ -43,6 +43,35 @@
       "en": "Prompt Editor",
       "ru": "Инструкции модели"
     },
+    // Stance Labels
+    {
+      "en": "Negative",
+      "ru": "Отрицательное"
+    },
+    {
+      "en": "Neutral",
+      "ru": "Нейтральное"
+    },
+    {
+      "en": "Positive",
+      "ru": "Положительное"
+    },
+    {
+      "en": "Strongly Disagree",
+      "ru": "Решительно против"
+    },
+    {
+      "en": "Disagree",
+      "ru": "Против"
+    },
+    {
+      "en": "Agree",
+      "ru": "За"
+    },
+    {
+      "en": "Strongly Agree",
+      "ru": "Решительно за"
+    },
     // Chat Settings ----
     {
       "en": "LLM Provider",
