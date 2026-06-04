@@ -209,7 +209,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             stance <- res$summary$stance
 
             valueBox(
-                i18n_r()$t(stance),
+                i18n_r()$t(as.character(stance)),
                 i18n_r()$t("Detected Stance"),
                 icon = icon("balance-scale"),
                 color = stance_colour_dashboard(stance)
