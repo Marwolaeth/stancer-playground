@@ -237,6 +237,13 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             req(raw_data())
             df <- head(raw_data(), input$n_rows)
 
+            # Safety Measures ----
+            cfg <- settings_rx()
+
+            # Temporary disable to prevent repeated clicks
+            shinyjs::disable("run_batch")
+            on.exit(shinyjs::enable("run_batch"))
+
             ## 1. Argument Mapping ----
             targets <- if (input$col_target != "") {
                 df[[input$col_target]]
@@ -250,12 +257,62 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                 input$manual_type
             }
 
-            # stancer::llm_stance(df, ...)
-            df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
-            df$explanation <- "Batch analysis explanation placeholder... This is a rather long explanation: the model tried to weigh all arguments."
-            # To be used with metric_f1()
-            attr(df, "scale") <- input$scale
-            df
+            # 2. Prepare Chat ----
+            # Check API Key
+            if (is.null(cfg$key)) {
+                showNotification(
+                    i18n_r()$t("API Key is missing!"),
+                    type = "error"
+                )
+                return(empty_result(i18n_r()$t("API Key is missing!")))
+            }
+
+            params <- ellmer::params(temperature = 0)
+            chat <- prepare_chat(cfg, params)
+
+            # 3. Run Analysis ----
+            withProgress(message = i18n_r()$t("Batch Analysis"), value = 0, {
+                results_list <- list()
+                n <- nrow(df)
+
+                for (i in seq_len(n)) {
+                    incProgress(
+                        1/n, detail = paste(i18n_r()$t("Processing row"), i)
+                    )
+
+                    res <- tryCatch({
+                        stancer::llm_stance(
+                            df[[input$col_text]][i],
+                            target = targets[i],
+                            type = types[i],
+                            chat_base = chat,
+                            language = input$lang,
+                            scale = input$scale,
+                            domain_role = input$domain
+                        )
+                    },
+                    error = function(e) {
+                        showNotification(
+                            paste(i18n_r()$t("Error during analysis:"), e$message),
+                            type = "error"
+                        )
+                        return(empty_result(i18n_r()$t("Error during analysis")))
+                    })
+
+                    results_list[[i]] <- res$summary
+                }
+
+                # 4. Combine ----
+               raw_data() |>
+                    cbind(do.call(rbind, results_list))
+            })
+
+            # # stancer::llm_stance(df, ...)
+            # df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
+            # df$explanation <- "Batch analysis explanation placeholder... This is a rather long explanation: the model tried to weigh all arguments."
+            # # To be used with metric_f1()
+            # attr(df, "scale") <- input$scale
+            # df
         })
 
         # Data & Results ----
