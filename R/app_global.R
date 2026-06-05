@@ -1,4 +1,4 @@
-options(ellmer_timeout_s = 120000000)
+# options(ellmer_timeout_s = 120000000)
 
 translations <- jsonlite::read_json(
     path = "inst/app/www/translations.json",
