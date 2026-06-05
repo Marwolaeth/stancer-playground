@@ -305,17 +305,6 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                         )
                     })
 
-                    # res <- list(
-                    #     summary = data.frame(
-                    #         text = df[["tweet"]][i],
-                    #         target = df$target[i],
-                    #         target_type = "object",
-                    #         language = "en",
-                    #         stance = "Negative",
-                    #         explanation = "Explanation placeholder"
-                    #     )
-                    # )
-
                     results_list[[i]] <- res$summary
                 }
             })
@@ -327,6 +316,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             if (input$col_type   == "") df$target_type <- result_df$target_type
             df$stance <- result_df$stance
             df$explanation <- result_df$explanation
+            attr(df, "scale") <- input$scale
 
             df
         })
