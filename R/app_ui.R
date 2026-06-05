@@ -42,7 +42,7 @@ app_ui <- function(request) {
                               menuItem(
                                   i18n$t("Settings"),
                                   tabName = "settings",
-                                  icon = icon("cog")
+                                  icon = icon("language")
                               )
                           )
                       ),
