@@ -60,6 +60,14 @@
       "ru": "Во время анализа произошла ошибка"
     },
     {
+      "en": "Use Parallel Processing (Faster)",
+      "ru": "Параллельный анализ (быстрее)"
+    },
+    {
+      "en": "Parallel Analysis Running...",
+      "ru": "Параллельный анализ…"
+    },
+    {
       "en": "Processing row",
       "ru": "Анализ документа №"
     },

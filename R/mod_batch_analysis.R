@@ -20,7 +20,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
                     hr(),
                     uiOutput(ns("column_mapping_ui"))
                 ),
-                ## Analysis Parameters ----
+                ## Parameters ----
                 box(
                     title = i18n$t("Analysis Parameters"),
                     width = NULL, status = "warning",
@@ -39,7 +39,13 @@ mod_batch_analysis_ui <- function(id, i18n) {
                         i18n$t("Number of rows to analyse"),
                         value = 6, min = 1, max = 20
                     ) |>
-                        with_helper("limits")
+                        with_helper("limits"),
+                    checkboxInput(
+                        ns("parallel"),
+                        i18n$t("Use Parallel Processing (Faster)"),
+                        value = FALSE
+                    ) |>
+                        with_helper("parallel")
                 ),
                 ## Actions ----
                 uiOutput(ns("batch_actions_ui"))
@@ -272,46 +278,87 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             chat <- prepare_chat(cfg, params)
 
             ## 3. Run Analysis ----
-            withProgress(message = i18n_r()$t("Batch Analysis"), value = 0, {
-                results_list <- list()
-
-                for (i in seq_len(n)) {
-                    incProgress(
-                        1/n, detail = paste(i18n_r()$t("Processing row"), i)
-                    )
-
-                    res <- tryCatch({
-                        stancer::llm_stance(
-                            df[[input$col_text]][i],
-                            target = targets[i],
-                            type = types[i],
-                            chat_base = chat,
-                            language = input$lang,
-                            scale = input$scale,
-                            domain_role = input$domain
-                        )
-                    },
-                    error = function(e) {
-                        showNotification(
-                            paste(
-                                i18n_r()$t("Error during analysis:"),
-                                e$message
-                            ),
-                            type = "error"
-                        )
-                        print("Error in analysis")
-                        return(
-                            empty_result(i18n_r()$t("Error during analysis"))
-                        )
+            if (input$parallel) {
+                ### Parallel ----
+                withProgress(
+                    message = i18n_r()$t("Parallel Analysis Running..."),
+                    value = 0.5,
+                    {
+                        result <- tryCatch({
+                            stancer::llm_stance(
+                                df[[input$col_text]],
+                                target = targets,
+                                type = types,
+                                chat_base = chat,
+                                language = input$lang,
+                                scale = input$scale,
+                                domain_role = input$domain
+                            )
+                        },
+                        error = function(e) {
+                            showNotification(
+                                paste(
+                                    i18n_r()$t("Error during analysis:"),
+                                    e$message
+                                ),
+                                type = "error"
+                            )
+                            print("Error in analysis")
+                            return(
+                                empty_result(
+                                    i18n_r()$t("Error during analysis")
+                                )
+                            )
+                        })
+                        result_df <- result$summary
                     })
+            } else {
+                ### Sequential ----
+                withProgress(
+                    message = i18n_r()$t("Batch Analysis"),
+                    value = 0,
+                    {
+                        results_list <- list()
+                        for (i in seq_len(n)) {
+                            incProgress(
+                                1/n,
+                                detail = paste(i18n_r()$t("Processing row"), i)
+                            )
 
-                    results_list[[i]] <- res$summary
-                }
-            })
+                            res <- tryCatch({
+                                stancer::llm_stance(
+                                    df[[input$col_text]][i],
+                                    target = targets[i],
+                                    type = types[i],
+                                    chat_base = chat,
+                                    language = input$lang,
+                                    scale = input$scale,
+                                    domain_role = input$domain
+                                )
+                            },
+                            error = function(e) {
+                                showNotification(
+                                    paste(
+                                        i18n_r()$t("Error during analysis:"),
+                                        e$message
+                                    ),
+                                    type = "error"
+                                )
+                                print("Error in analysis")
+                                return(
+                                    empty_result(
+                                        i18n_r()$t("Error during analysis")
+                                    )
+                                )
+                            })
+
+                            results_list[[i]] <- res$summary
+                        }
+                    })
+                result_df <- do.call(rbind, results_list)
+            }
 
             ## 4. Combine ----
-            result_df <- do.call(rbind, results_list)
-
             if (input$col_target == "") df$target <- result_df$target
             if (input$col_type   == "") df$target_type <- result_df$target_type
             df$stance <- result_df$stance
