@@ -235,7 +235,8 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
         # Stance Analysis ----
         processed_data <- eventReactive(input$run_batch, {
             req(raw_data())
-            df <- head(raw_data(), input$n_rows)
+            n <- input$n_rows
+            df <- head(raw_data(), n)
 
             # Safety Measures ----
             cfg <- settings_rx()
@@ -248,16 +249,16 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             targets <- if (input$col_target != "") {
                 df[[input$col_target]]
             } else {
-                input$manual_target
+                rep(input$manual_target, n)
             }
 
             types <- if (input$col_type != "") {
                 df[[input$col_type]]
             } else {
-                input$manual_type
+                rep(input$manual_type, n)
             }
 
-            # 2. Prepare Chat ----
+            ## 2. Prepare Chat ----
             # Check API Key
             if (is.null(cfg$key)) {
                 showNotification(
@@ -270,10 +271,9 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             params <- ellmer::params(temperature = 0)
             chat <- prepare_chat(cfg, params)
 
-            # 3. Run Analysis ----
+            ## 3. Run Analysis ----
             withProgress(message = i18n_r()$t("Batch Analysis"), value = 0, {
                 results_list <- list()
-                n <- nrow(df)
 
                 for (i in seq_len(n)) {
                     incProgress(
@@ -293,26 +293,42 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
                     },
                     error = function(e) {
                         showNotification(
-                            paste(i18n_r()$t("Error during analysis:"), e$message),
+                            paste(
+                                i18n_r()$t("Error during analysis:"),
+                                e$message
+                            ),
                             type = "error"
                         )
-                        return(empty_result(i18n_r()$t("Error during analysis")))
+                        print("Error in analysis")
+                        return(
+                            empty_result(i18n_r()$t("Error during analysis"))
+                        )
                     })
+
+                    # res <- list(
+                    #     summary = data.frame(
+                    #         text = df[["tweet"]][i],
+                    #         target = df$target[i],
+                    #         target_type = "object",
+                    #         language = "en",
+                    #         stance = "Negative",
+                    #         explanation = "Explanation placeholder"
+                    #     )
+                    # )
 
                     results_list[[i]] <- res$summary
                 }
-
-                # 4. Combine ----
-               raw_data() |>
-                    cbind(do.call(rbind, results_list))
             })
 
-            # # stancer::llm_stance(df, ...)
-            # df$stance <- sample(c("Positive", "Neutral", "Negative"), nrow(df), replace = TRUE)
-            # df$explanation <- "Batch analysis explanation placeholder... This is a rather long explanation: the model tried to weigh all arguments."
-            # # To be used with metric_f1()
-            # attr(df, "scale") <- input$scale
-            # df
+            ## 4. Combine ----
+            result_df <- do.call(rbind, results_list)
+
+            if (input$col_target == "") df$target <- result_df$target
+            if (input$col_type   == "") df$target_type <- result_df$target_type
+            df$stance <- result_df$stance
+            df$explanation <- result_df$explanation
+
+            df
         })
 
         # Data & Results ----

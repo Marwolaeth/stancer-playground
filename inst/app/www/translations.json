@@ -59,6 +59,10 @@
       "en": "Error during analysis",
       "ru": "Во время анализа произошла ошибка"
     },
+    {
+      "en": "Processing row",
+      "ru": "Анализ документа №"
+    },
     // Stance Labels ----
     {
       "en": "Negative",

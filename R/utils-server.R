@@ -20,6 +20,10 @@ prepare_chat <- function(config, params = NULL) {
 empty_result <- function(msg) {
     list(
         summary = data.frame(
+            text = "NA",
+            target = "NA",
+            target_type = NA,
+            language = NA,
             stance = "NA",
             explanation = msg
         )
