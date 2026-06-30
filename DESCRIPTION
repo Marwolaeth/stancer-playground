@@ -26,7 +26,8 @@ Imports:
     shinyWidgets,
     shinycssloaders,
     stancer (>= 0.0.0.9000),
-    tools
+    tools,
+    pkgload
 Remotes:
     Marwolaeth/stancer
 Suggests: 

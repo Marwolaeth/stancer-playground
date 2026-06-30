@@ -11,3 +11,5 @@ $run_dev.*
 ^stancer.playground\.Rcheck$
 ^stancer.playground.*\.tar\.gz$
 ^stancer.playground.*\.tgz$
+^app\.R$
+^rsconnect$
