@@ -244,7 +244,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                             icon("info-circle"),
                             i18n_r()$t("Reasoning & Explanation")
                         ),
-                        br(),
+                        shiny::br(),
                         p(
                             res$summary$explanation,
                             style = "font-style: italic; font-size: 1.1em; color: #2c3e50; padding: 10px;"
@@ -254,22 +254,27 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                     # 2. Expert Analysis
                     tabPanel(
                         title = tagList(icon("users"), i18n_r()$t("Experts")),
-                        br(),
+                        shiny::br(),
                         tags$ul(
                             style = "list-style-type: none; padding-left: 0;",
                             tags$li(
-                                strong(i18n_r()$t("Linguist:")),
-                                res$analysis$linguistic
+                                shiny::h1(i18n_r()$t("Linguistic Analysis")),
+                                shiny::br(),
+                                shiny::markdown(res$analysis$linguistic)
                             ),
                             tags$hr(),
                             tags$li(
-                                strong(i18n_r()$t("Social Media:")),
-                                res$analysis$social_media
+                                shiny::h1(
+                                    i18n_r()$t("Social Media Interpretation")
+                                ),
+                                shiny::br(),
+                                shiny::markdown(res$analysis$social_media)
                             ),
                             tags$hr(),
                             tags$li(
-                                strong(paste0(input$domain, ":")),
-                                res$analysis$domain
+                                shiny::h1(paste0(input$domain, ":")),
+                                shiny::br(),
+                                shiny::markdown(res$analysis$domain)
                             )
                         )
                     ),
@@ -277,7 +282,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                     # 3. Debates
                     tabPanel(
                         title = tagList(icon("comments"), i18n_r()$t("Debates")),
-                        br(),
+                        shiny::br(),
                         fluidRow(
                             column(4,
                                    tags$div(
