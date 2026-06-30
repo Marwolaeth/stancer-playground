@@ -61,7 +61,7 @@ mod_model_config_server <- function(id, i18n) {
 
         # 1. Load API Key from Cookies on start ----
         observeEvent(get_cookie("stancer_api_key"), {
-            updatePasswordInput(session, "api_key", value = get_cookie("stancer_api_key"))
+            updateTextInput(session, "api_key", value = get_cookie("stancer_api_key"))
             updateCheckboxInput(session, "save_cookie", value = TRUE)
         }, once = TRUE)
 
