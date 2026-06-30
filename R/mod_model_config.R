@@ -86,7 +86,7 @@ mod_model_config_server <- function(id, i18n) {
                 )
             } else if (nchar(input$api_key) > 0) {
                 span(icon("key"),
-                     i18n$t("Using Manual Key"),
+                     i18n()$t("Using Manual Key"),
                      style = "color: orange; font-size: 0.8em;"
                 )
             } else {
