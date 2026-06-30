@@ -190,7 +190,11 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                     type = "error"
                 )
                 return(empty_result(i18n_r()$t("Error during analysis")))
-            })
+            }) #|>
+                # shiny::bindCache(
+                #     input$text, input$target, input$scale, input$domain,
+                #     settings_rx()
+                # )
             # stance <- sample(
             #     c(
             #         "Positive", "Neutral", "Negative",
@@ -279,9 +283,12 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                                    tags$div(
                                        style = "border-left: 3px solid green; padding-left: 10px;",
                                        strong(
-                                           i18n_r()$t("Positive")),
-                                       p(
-                                           res$debates$positive,
+                                           i18n_r()$t("Positive")
+                                       ),
+                                       tags$div(
+                                           shiny::markdown(
+                                               res$debates$positive
+                                           ),
                                            style = "font-size: 0.9em;"
                                        )
                                    )
@@ -291,11 +298,13 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                                        style = "border-left: 3px solid gray; padding-left: 10px;",
                                        strong(
                                            i18n_r()$t("Neutral")
-                                        ),
-                                       p(
-                                           res$debates$neutral,
+                                       ),
+                                       tags$div(
+                                           shiny::markdown(
+                                               res$debates$neutral
+                                           ),
                                            style = "font-size: 0.9em;"
-                                        )
+                                       )
                                    )
                             ),
                             column(4,
@@ -303,11 +312,13 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
                                        style = "border-left: 3px solid red; padding-left: 10px;",
                                        strong(
                                            i18n_r()$t("Negative")
-                                        ),
-                                       p(
-                                           res$debates$negative,
+                                       ),
+                                       tags$div(
+                                           shiny::markdown(
+                                               res$debates$negative
+                                           ),
                                            style = "font-size: 0.9em;"
-                                        )
+                                       )
                                    )
                             )
                         )
