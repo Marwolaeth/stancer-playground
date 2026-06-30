@@ -182,6 +182,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             role_labels <- sapply(roles, function(x)
                 tdf[x, input$lang]
             )
+            roles <- role_labels
             names(roles) <- role_labels
 
             selectInput(
