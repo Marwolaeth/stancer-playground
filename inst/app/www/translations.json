@@ -226,6 +226,26 @@
       "en": "Reasoning & Explanation",
       "ru": "Рассуждение и пояснение"
     },
+    {
+      "en": "Analysis Details",
+      "ru": "Детали анализа"
+    },
+    {
+      "en": "Experts",
+      "ru": "Экспертный анализ"
+    },
+    {
+      "en": "Linguist:",
+      "ru": "Лингвист:"
+    },
+    {
+      "en": "Social Media:",
+      "ru": "Эксперт по соцмедиа:"
+    },
+    {
+      "en": "Debates",
+      "ru": "Дебаты"
+    },
     // Batch Analysis ----
     {
       "en": "Data Import",

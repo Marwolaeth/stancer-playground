@@ -203,6 +203,7 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
         })
 
         # Output ----
+        ## Stance Box ----
         output$stance_box <- renderValueBox({
             res <- result()
             req(res)
@@ -216,17 +217,101 @@ mod_single_analysis_server <- function(id, settings_rx, i18n_r) {
             )
         })
 
+        ## Explanation & Analysis ----
         output$explanation_ui <- renderUI({
             res <- result()
             req(res)
 
+            current_status <- stance_status(res$summary$stance)
+
             box(
-                title = i18n_r()$t("Reasoning & Explanation"),
+                title = i18n_r()$t("Analysis Details"),
                 width = NULL,
-                status = stance_status(res$summary$stance),
-                p(
-                    res$summary$explanation,
-                    style = "font-style: italic; font-size: 1.1em; color: #2c3e50;"
+                status = current_status,
+                solidHeader = FALSE,
+
+                tabsetPanel(
+                    id = ns("explanation_tabs"),
+                    type = "tabs",
+
+                    # 1. Result Explanation
+                    tabPanel(
+                        title = tagList(
+                            icon("info-circle"),
+                            i18n_r()$t("Reasoning & Explanation")
+                        ),
+                        br(),
+                        p(
+                            res$summary$explanation,
+                            style = "font-style: italic; font-size: 1.1em; color: #2c3e50; padding: 10px;"
+                        )
+                    ),
+
+                    # 2. Expert Analysis
+                    tabPanel(
+                        title = tagList(icon("users"), i18n_r()$t("Experts")),
+                        br(),
+                        tags$ul(
+                            style = "list-style-type: none; padding-left: 0;",
+                            tags$li(
+                                strong(i18n_r()$t("Linguist:")),
+                                res$analysis$linguistic
+                            ),
+                            tags$hr(),
+                            tags$li(
+                                strong(i18n_r()$t("Social Media:")),
+                                res$analysis$social_media
+                            ),
+                            tags$hr(),
+                            tags$li(
+                                strong(paste0(input$domain, ":")),
+                                res$analysis$domain
+                            )
+                        )
+                    ),
+
+                    # 3. Debates
+                    tabPanel(
+                        title = tagList(icon("comments"), i18n_r()$t("Debates")),
+                        br(),
+                        fluidRow(
+                            column(4,
+                                   tags$div(
+                                       style = "border-left: 3px solid green; padding-left: 10px;",
+                                       strong(
+                                           i18n_r()$t("Positive")),
+                                       p(
+                                           res$debates$positive,
+                                           style = "font-size: 0.9em;"
+                                       )
+                                   )
+                            ),
+                            column(4,
+                                   tags$div(
+                                       style = "border-left: 3px solid gray; padding-left: 10px;",
+                                       strong(
+                                           i18n_r()$t("Neutral")
+                                        ),
+                                       p(
+                                           res$debates$neutral,
+                                           style = "font-size: 0.9em;"
+                                        )
+                                   )
+                            ),
+                            column(4,
+                                   tags$div(
+                                       style = "border-left: 3px solid red; padding-left: 10px;",
+                                       strong(
+                                           i18n_r()$t("Negative")
+                                        ),
+                                       p(
+                                           res$debates$negative,
+                                           style = "font-size: 0.9em;"
+                                        )
+                                   )
+                            )
+                        )
+                    )
                 )
             )
         })
