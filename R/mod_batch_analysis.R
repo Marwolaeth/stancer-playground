@@ -64,7 +64,7 @@ mod_batch_analysis_ui <- function(id, i18n) {
                     reactable::reactableOutput(ns("data_table"))
                 ),
                 uiOutput(ns("download_ui")),
-                br(),
+                shiny::br(),
                 uiOutput(ns("metrics_ui")),
                 uiOutput(ns("confusion_matrix_ui"))
             )

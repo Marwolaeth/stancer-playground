@@ -43,9 +43,9 @@ mod_model_config_ui <- function(id, i18n) {
                 class = "btn-info",
                 width = "100%"
             ),
-            br(),
-            br(),
-            br(),
+            shiny::br(),
+            shiny::br(),
+            shiny::br(),
             uiOutput(ns("conn_status")) |> with_red_spinner(
                 caption = i18n$t("Testing Connection..."),
                 size = 0.4
