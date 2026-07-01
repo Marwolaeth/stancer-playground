@@ -362,7 +362,7 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             ## 4. Combine ----
             if (input$col_target == "") df$target <- result_df$target
             if (input$col_type   == "") df$target_type <- result_df$target_type
-            df$stance <- result_df$stance
+            df$.stance <- result_df$stance
             df$explanation <- result_df$explanation
             attr(df, "scale") <- input$scale
 
@@ -522,11 +522,11 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             df <- processed_data()
 
             cm <- cm(
-                df$stance, df[[input$col_true]],
+                df$.stance, df[[input$col_true]],
                 scale = attr(df, "scale")
             )
             acc <- metric_accuracy(
-                df$stance, df[[input$col_true]]
+                df$.stance, df[[input$col_true]]
             ) |> round(3)
 
             f1 <- metric_f1(cm) |> round(3)

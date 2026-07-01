@@ -16,6 +16,8 @@ reactable_lang <- function(i18n_r) {
 }
 
 content_tooltip <- function(value, cmax = 50) {
+    if (is.na(value)) return("NA")
+
     if (nchar(value) > cmax) {
         htmltools::tagList(
             htmltools::span(substr(value, 1, cmax), "..."),
@@ -50,7 +52,7 @@ stancer_columns <- function(
         col_target = NULL
 ) {
     ## Protect column names ----
-    protected_names <- c("stance", "explanation")
+    protected_names <- c(".stance", "explanation")
     safe_col_text <- if (col_text %in% protected_names) paste0(col_text, "_original") else col_text
     safe_col_true <- if (col_true == "") "undefined" else col_true
     safe_col_target <- if (col_target == "") "stance_target" else col_target
@@ -66,7 +68,7 @@ stancer_columns <- function(
             style = 'white-space: pre-wrap;'
         ),
         ## Predicted Stance ----
-        stance = reactable::colDef(
+        .stance = reactable::colDef(
             show = TRUE,
             name = "Predicted Stance",
             searchable = FALSE,
