@@ -105,6 +105,13 @@ mod_batch_analysis_server <- function(id, settings_rx, i18n_r) {
             } else {
                 readxl::read_excel(input$file_input$datapath)
             }
+
+            # Restrict n_rows
+            updateNumericInput(
+                session = session,
+                "n_rows",
+                value = nrow(df), min = 1, max = nrow(df)
+            )
             raw_data(df)
         })
 
