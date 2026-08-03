@@ -19,8 +19,8 @@ cm <- function(y_hat, y, scale = c("categorical", "likert")) {
             "Strongly Agree"
         )
     )
-    if(!is.factor(y)) y <- factor(y, levels = levels, ordered = TRUE)
-    if(!is.factor(y_hat)) y_hat <- factor(y_hat, levels = levels, ordered = TRUE)
+    y <- factor(as.character(y), levels = levels, ordered = TRUE)
+    y_hat <- factor(as.character(y_hat), levels = levels, ordered = TRUE)
 
     # Confusion matrix
     table(Predicted = y_hat, Actual = y)
