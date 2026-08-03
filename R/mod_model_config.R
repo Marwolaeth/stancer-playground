@@ -67,8 +67,8 @@ mod_model_config_server <- function(id, i18n) {
                 textInput(
                     ns("project_id"),
                     i18n()$t("Yandex Cloud Project ID"),
-                    value = ""
-                )
+                    value = get_cookie("stancer_project_id") %||% ""
+                ) |> with_helper("model-project-id")
             } else {
                 NULL
             }
@@ -87,7 +87,15 @@ mod_model_config_server <- function(id, i18n) {
             } else if (!input$save_cookie) {
                 remove_cookie("stancer_api_key")
             }
-        })
+
+            if (!is.null(input$project_id)) {
+                if (input$save_cookie && nchar(input$project_id) > 0) {
+                    set_cookie("stancer_project_id", input$project_id)
+                } else if (!input$save_cookie) {
+                    remove_cookie("stancer_project_id")
+                }
+            }
+        }) |> shiny::debounce(2000)
 
         # 3. API Key Status (Priority: Sys.env > Input) ----
         output$key_status <- renderUI({
