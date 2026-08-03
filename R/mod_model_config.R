@@ -13,7 +13,7 @@ mod_model_config_ui <- function(id, i18n) {
                     "Anthropic" = "anthropic",
                     "OpenAI" = "openai",
                     "Mistral" = "mistral",
-                    "OpenAI-compatible" = "openai-compatible"
+                    "Yandex" = "yandex"
                 )
             ) |> with_helper("model-provider"),
             textInput(
@@ -21,6 +21,8 @@ mod_model_config_ui <- function(id, i18n) {
                 i18n$t("Model Name"),
                 value = "google/gemini-2.0-flash-001"
             ) |> with_helper("model-name"),
+
+            uiOutput(ns("project_id_ui")),
 
             passwordInput(
                 ns("api_key"),
@@ -58,6 +60,19 @@ mod_model_config_ui <- function(id, i18n) {
 mod_model_config_server <- function(id, i18n) {
     moduleServer(id, function(input, output, session) {
         ns <- session$ns
+
+        # Additional config for Yandex ----
+        output$project_id_ui <- renderUI({
+            if (input$provider == "yandex") {
+                textInput(
+                    ns("project_id"),
+                    i18n()$t("Yandex Cloud Project ID"),
+                    value = ""
+                )
+            } else {
+                NULL
+            }
+        })
 
         # 1. Load API Key from Cookies on start ----
         observeEvent(get_cookie("stancer_api_key"), {
@@ -109,6 +124,7 @@ mod_model_config_server <- function(id, i18n) {
             config <- list(
                 provider = input$provider,
                 model = input$model_name,
+                project_id = input$project_id %||% character(0),
                 key = if (nchar(input$api_key) > 0)
                     input$api_key
                 else
@@ -147,6 +163,7 @@ mod_model_config_server <- function(id, i18n) {
             list(
                 provider = input$provider,
                 model = input$model_name,
+                project_id = input$project_id %||% character(0),
                 key = if (nchar(input$api_key) > 0)
                     input$api_key
                 else

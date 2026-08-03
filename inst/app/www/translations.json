@@ -48,6 +48,10 @@
       "ru": "API-ключ не найден!"
     },
     {
+      "en": "Yandex Cloud Project ID",
+      "ru": "ID проекта Yandex Cloud"
+    },
+    {
       "en": "Analysis in progress...",
       "ru": "Анализ…"
     },
