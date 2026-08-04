@@ -5,7 +5,7 @@ account: marwolaeth
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 17567622
-bundleId: 12358114
+bundleId: 12363610
 url: https://marwolaeth.shinyapps.io/stancer-playground/
 version: 1
 asMultiple: FALSE
